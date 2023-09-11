@@ -1,0 +1,1165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.2.0"><bpmn:process id="TEMPLATE_INSTANCE_PROCESS_RiskProfilingShortVersion_54306582-51fb-4490-b319-96eb828f1e6f" name="Риск-профилирование (сокращенная анкета)" isExecutable="true"><bpmn:documentation /><bpmn:startEvent id="Event_1nyxd05"><bpmn:outgoing>Flow_1i879xq</bpmn:outgoing></bpmn:startEvent><bpmn:serviceTask id="Activity_1xf37w9" name="Статус: Заполнение анкеты"><bpmn:extensionElements><camunda:connector><camunda:inputOutput><camunda:inputParameter name="url">${ezdocUrl}/api/camunda/instance/book/saveLabel/${instanceId}?label=Заполнение+анкеты</camunda:inputParameter><camunda:inputParameter name="method">POST</camunda:inputParameter><camunda:inputParameter name="headers"><camunda:map><camunda:entry key="Accept">*/*</camunda:entry></camunda:map></camunda:inputParameter></camunda:inputOutput><camunda:connectorId>http-connector</camunda:connectorId></camunda:connector></bpmn:extensionElements><bpmn:incoming>Flow_0c5hn95</bpmn:incoming><bpmn:outgoing>Flow_0gg8ixq</bpmn:outgoing></bpmn:serviceTask><bpmn:subProcess id="Activity_0x1zezh" name="Ответ на вопрос i"><bpmn:incoming>Flow_01cydca</bpmn:incoming><bpmn:outgoing>Flow_1jpv05l</bpmn:outgoing><bpmn:scriptTask id="Activity_0y2lab3" name="Логирование" scriptFormat="javascript"><bpmn:incoming>Flow_02yndvp</bpmn:incoming><bpmn:outgoing>Flow_08adz16</bpmn:outgoing><bpmn:script>print(new Date() + " waiting for question " + i + " " + instanceId)</bpmn:script></bpmn:scriptTask><bpmn:serviceTask id="Activity_1g5o61z" name="Таймаут?" camunda:expression="false" camunda:resultVariable="timeout"><bpmn:incoming>Flow_0ksb6jn</bpmn:incoming><bpmn:outgoing>Flow_1qi1kle</bpmn:outgoing></bpmn:serviceTask><bpmn:intermediateCatchEvent id="Event_0vrwoug" camunda:asyncAfter="true"><bpmn:incoming>Flow_08adz16</bpmn:incoming><bpmn:outgoing>Flow_0ksb6jn</bpmn:outgoing><bpmn:signalEventDefinition id="SignalEventDefinition_1yuv7vg" signalRef="Signal_1ces4he" /></bpmn:intermediateCatchEvent><bpmn:endEvent id="Event_15le5gu"><bpmn:incoming>Flow_1qi1kle</bpmn:incoming><bpmn:terminateEventDefinition id="TerminateEventDefinition_0hhehs5" /></bpmn:endEvent><bpmn:intermediateCatchEvent id="Event_163c3ra"><bpmn:incoming>Flow_0i12ldc</bpmn:incoming><bpmn:outgoing>Flow_1erxbwx</bpmn:outgoing><bpmn:timerEventDefinition id="TimerEventDefinition_0r7ifh4"><bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT6000S</bpmn:timeDuration></bpmn:timerEventDefinition></bpmn:intermediateCatchEvent><bpmn:serviceTask id="Activity_0kdzpmf" name="Таймаут?" camunda:expression="true" camunda:resultVariable="timeout"><bpmn:incoming>Flow_1erxbwx</bpmn:incoming><bpmn:outgoing>Flow_03783hy</bpmn:outgoing></bpmn:serviceTask><bpmn:parallelGateway id="Gateway_1i5scen"><bpmn:incoming>Flow_148t3i9</bpmn:incoming><bpmn:outgoing>Flow_0i12ldc</bpmn:outgoing><bpmn:outgoing>Flow_02yndvp</bpmn:outgoing></bpmn:parallelGateway><bpmn:startEvent id="Event_0gl5k90"><bpmn:outgoing>Flow_148t3i9</bpmn:outgoing></bpmn:startEvent><bpmn:sequenceFlow id="Flow_148t3i9" sourceRef="Event_0gl5k90" targetRef="Gateway_1i5scen" /><bpmn:sequenceFlow id="Flow_0i12ldc" sourceRef="Gateway_1i5scen" targetRef="Event_163c3ra" /><bpmn:sequenceFlow id="Flow_08adz16" sourceRef="Activity_0y2lab3" targetRef="Event_0vrwoug" /><bpmn:sequenceFlow id="Flow_0ksb6jn" sourceRef="Event_0vrwoug" targetRef="Activity_1g5o61z" /><bpmn:sequenceFlow id="Flow_02yndvp" sourceRef="Gateway_1i5scen" targetRef="Activity_0y2lab3" /><bpmn:sequenceFlow id="Flow_1qi1kle" sourceRef="Activity_1g5o61z" targetRef="Event_15le5gu" /><bpmn:sequenceFlow id="Flow_03783hy" sourceRef="Activity_0kdzpmf" targetRef="Activity_0n4xf2v" /><bpmn:sequenceFlow id="Flow_1erxbwx" sourceRef="Event_163c3ra" targetRef="Activity_0kdzpmf" /><bpmn:serviceTask id="Activity_0n4xf2v" name="Статус: Незавершенная анкета"><bpmn:extensionElements><camunda:connector><camunda:inputOutput><camunda:inputParameter name="url">${ezdocUrl}/api/camunda/instance/book/saveLabel/${instanceId}?label=Незавершенная+анкета</camunda:inputParameter><camunda:inputParameter name="method">POST</camunda:inputParameter><camunda:inputParameter name="headers"><camunda:map><camunda:entry key="Accept">*/*</camunda:entry></camunda:map></camunda:inputParameter></camunda:inputOutput><camunda:connectorId>http-connector</camunda:connectorId></camunda:connector></bpmn:extensionElements><bpmn:incoming>Flow_03783hy</bpmn:incoming><bpmn:outgoing>Flow_1vrr1y6</bpmn:outgoing></bpmn:serviceTask><bpmn:sequenceFlow id="Flow_1vrr1y6" sourceRef="Activity_0n4xf2v" targetRef="Event_1n7jv3y" /><bpmn:endEvent id="Event_1n7jv3y"><bpmn:incoming>Flow_1vrr1y6</bpmn:incoming><bpmn:terminateEventDefinition id="TerminateEventDefinition_1o410m2" /></bpmn:endEvent></bpmn:subProcess><bpmn:serviceTask id="Activity_0tgogd4" name="Получаем значение параметров"><bpmn:extensionElements><camunda:properties><camunda:property name="isEzdocServiceTask" value="true" /><camunda:property name="ezdocServiceTaskType" value="request" /><camunda:property name="requestType" value="GENERIC" /></camunda:properties><camunda:connector><camunda:inputOutput><camunda:inputParameter name="headers"><camunda:map><camunda:entry key="Accept">*/*</camunda:entry><camunda:entry key="Content-Type">application/json</camunda:entry></camunda:map></camunda:inputParameter><camunda:inputParameter name="url">${ezdocUrl}/api/camunda/instance/book/${instanceId}/getAttributes?systemName=QuestionnairesType&amp;systemName=QuestionnairesNumber&amp;systemName=cifID&amp;systemName=QuestionsQuantity</camunda:inputParameter><camunda:inputParameter name="method">GET</camunda:inputParameter><camunda:outputParameter name="QuestionnairesNumber"><camunda:script scriptFormat="javascript">JSON.parse(response).QuestionnairesNumber</camunda:script></camunda:outputParameter><camunda:outputParameter name="QuestionnairesType"><camunda:script scriptFormat="javascript">JSON.parse(response).QuestionnairesType</camunda:script></camunda:outputParameter><camunda:outputParameter name="CIF"><camunda:script scriptFormat="javascript">JSON.parse(response).cifID</camunda:script></camunda:outputParameter><camunda:outputParameter name="QuestionsQuantity"><camunda:script scriptFormat="javascript">JSON.parse(response).QuestionsQuantity</camunda:script></camunda:outputParameter></camunda:inputOutput><camunda:connectorId>http-connector</camunda:connectorId></camunda:connector></bpmn:extensionElements><bpmn:incoming>Flow_162vnzh</bpmn:incoming><bpmn:incoming>Flow_1i879xq</bpmn:incoming><bpmn:outgoing>Flow_0mor03i</bpmn:outgoing></bpmn:serviceTask><bpmn:scriptTask id="Activity_0qkf749" name="Номер вопроса i = 1" scriptFormat="javascript"><bpmn:incoming>Flow_0zhuxkn</bpmn:incoming><bpmn:outgoing>Flow_0bwrr12</bpmn:outgoing><bpmn:script>execution.setVariable('i', org.camunda.bpm.engine.variable.Variables.integerValue(1))</bpmn:script></bpmn:scriptTask><bpmn:exclusiveGateway id="Gateway_0k7ag1f" default="Flow_0whjv01"><bpmn:incoming>Flow_00x0nx8</bpmn:incoming><bpmn:outgoing>Flow_0whjv01</bpmn:outgoing><bpmn:outgoing>Flow_14hg2xq</bpmn:outgoing></bpmn:exclusiveGateway><bpmn:serviceTask id="Activity_0c0xijz" name="Установка статуса &#34;Ошибка поиска анкеты&#34;"><bpmn:extensionElements><camunda:properties><camunda:property name="isEzdocServiceTask" value="true" /><camunda:property name="ezdocServiceTaskType" value="request" /><camunda:property name="requestType" value="GENERIC" /></camunda:properties><camunda:connector><camunda:inputOutput><camunda:inputParameter name="headers"><camunda:map><camunda:entry key="Accept">*/*</camunda:entry><camunda:entry key="Content-Type">application/json</camunda:entry></camunda:map></camunda:inputParameter><camunda:inputParameter name="url">${ezdocUrl}/api/camunda/instance/book/saveLabel/${instanceId}?label=Ошибка+поиска+анкеты</camunda:inputParameter><camunda:inputParameter name="method">POST</camunda:inputParameter><camunda:outputParameter name="Error">1</camunda:outputParameter></camunda:inputOutput><camunda:connectorId>http-connector</camunda:connectorId></camunda:connector></bpmn:extensionElements><bpmn:incoming>Flow_14hg2xq</bpmn:incoming><bpmn:outgoing>Flow_0cusia7</bpmn:outgoing></bpmn:serviceTask><bpmn:serviceTask id="Activity_0redwm1" name="Сообщаем об окончании процесса"><bpmn:extensionElements><camunda:connector><camunda:inputOutput><camunda:inputParameter name="url">${ezdocUrl}/api/camunda/instance/book/processCompleted/${instanceId}</camunda:inputParameter><camunda:inputParameter name="method">POST</camunda:inputParameter><camunda:inputParameter name="headers"><camunda:map><camunda:entry key="Accept">*/*</camunda:entry></camunda:map></camunda:inputParameter></camunda:inputOutput><camunda:connectorId>http-connector</camunda:connectorId></camunda:connector></bpmn:extensionElements><bpmn:incoming>Flow_0cusia7</bpmn:incoming><bpmn:outgoing>Flow_08mc5nl</bpmn:outgoing></bpmn:serviceTask><bpmn:endEvent id="Event_0b17b5w"><bpmn:incoming>Flow_08mc5nl</bpmn:incoming></bpmn:endEvent><bpmn:serviceTask id="Activity_1l5goux" name="Получаем название анкеты"><bpmn:extensionElements><camunda:properties><camunda:property name="isEzdocServiceTask" value="true" /><camunda:property name="ezdocServiceTaskType" value="request" /><camunda:property name="requestType" value="GENERIC" /></camunda:properties><camunda:connector><camunda:inputOutput><camunda:inputParameter name="headers"><camunda:map><camunda:entry key="Accept">*/*</camunda:entry><camunda:entry key="Content-Type">application/json</camunda:entry></camunda:map></camunda:inputParameter><camunda:inputParameter name="method">GET</camunda:inputParameter><camunda:inputParameter name="url">${ezdocUrl}/api/camunda/instance/book/${QuestionnaireVersion_refid}/getAttributes?systemName=QuestionnairesName</camunda:inputParameter><camunda:outputParameter name="QuestionnairesName"><camunda:script scriptFormat="javascript">JSON.parse(response).QuestionnairesName</camunda:script></camunda:outputParameter></camunda:inputOutput><camunda:connectorId>http-connector</camunda:connectorId></camunda:connector></bpmn:extensionElements><bpmn:incoming>Flow_0whjv01</bpmn:incoming><bpmn:outgoing>Flow_06umeta</bpmn:outgoing></bpmn:serviceTask><bpmn:serviceTask id="Activity_0ktmbwj" name="Получаем варианты ответов"><bpmn:extensionElements><camunda:connector><camunda:inputOutput><camunda:inputParameter name="url">${ezdocUrl}/api/mongo/executeRequest/anketaRisk</camunda:inputParameter><camunda:inputParameter name="method">POST</camunda:inputParameter><camunda:inputParameter name="headers"><camunda:map><camunda:entry key="Accept">*/*</camunda:entry><camunda:entry key="Content-Type">application/json</camunda:entry></camunda:map></camunda:inputParameter><camunda:inputParameter name="payload">{
+
+	"QuestionnairesNumber": "${QuestionnairesNumber}",
+
+	"QuestionnairesType": "${QuestionnairesType}",
+
+	"qty":5
+
+}</camunda:inputParameter><camunda:outputParameter name="answers"><camunda:script scriptFormat="javascript">try{
+
+S(response).prop("cursor").prop("firstBatch")
+
+} catch(e) {
+
+throw new org.camunda.bpm.engine.delegate.BpmnError("IT_EXCEPTION",e);
+
+}</camunda:script></camunda:outputParameter></camunda:inputOutput><camunda:connectorId>http-connector</camunda:connectorId></camunda:connector></bpmn:extensionElements><bpmn:incoming>Flow_06umeta</bpmn:incoming><bpmn:outgoing>Flow_1azbago</bpmn:outgoing></bpmn:serviceTask><bpmn:serviceTask id="Activity_1xagp14" name="Сохраняем все данные в объект"><bpmn:extensionElements><camunda:connector><camunda:inputOutput><camunda:inputParameter name="url">${ezdocUrl}/api/camunda/instance/book/${instanceId}/setAttributes?esWaitUntil=true</camunda:inputParameter><camunda:inputParameter name="method">POST</camunda:inputParameter><camunda:inputParameter name="headers"><camunda:map><camunda:entry key="Accept">*/*</camunda:entry><camunda:entry key="Content-Type">application/json</camunda:entry></camunda:map></camunda:inputParameter><camunda:inputParameter name="payload"><camunda:script scriptFormat="javascript">var result_json = JSON.parse(result);
+
+result_json.objectId = instanceId;
+
+result_json.AnketaDateTime = AnketaDateTime;
+
+result_json.QuestionnairesName = QuestionnairesName;
+
+result_json.NextProcessButtons = ["NEXT"];
+
+result_json.ProcessStep = i_str;
+
+JSON.stringify(result_json)</camunda:script></camunda:inputParameter><camunda:outputParameter name="res_json"><camunda:script scriptFormat="javascript">var result_json = JSON.parse(result);
+
+result_json.objectId = instanceId;
+
+result_json.AnketaDateTime = AnketaDateTime;
+
+result_json.QuestionnairesName = QuestionnairesName;
+
+result_json.NextProcessButtons = ["NEXT"];
+
+result_json.ProcessStep = i_str;
+
+result_json.ShortName = "Риск_профилирование";
+
+JSON.stringify(result_json)</camunda:script></camunda:outputParameter></camunda:inputOutput><camunda:connectorId>http-connector</camunda:connectorId></camunda:connector></bpmn:extensionElements><bpmn:incoming>Flow_0dahdb7</bpmn:incoming><bpmn:outgoing>Flow_0366zxn</bpmn:outgoing></bpmn:serviceTask><bpmn:scriptTask id="Activity_1trnm3q" name="Сумма баллов" scriptFormat="javascript"><bpmn:incoming>Flow_0gg8ixq</bpmn:incoming><bpmn:outgoing>Flow_0d86d58</bpmn:outgoing><bpmn:script>execution.setVariable('SumBall', org.camunda.bpm.engine.variable.Variables.integerValue(0))</bpmn:script></bpmn:scriptTask><bpmn:scriptTask id="Activity_17y4ynu" name="Признак мультивыбора" scriptFormat="javascript" camunda:resultVariable="Multichoice"><bpmn:extensionElements><camunda:properties><camunda:property name="isEzdocTask" value="true" /><camunda:property name="ezdocServiceTaskType" value="deleteFileServiceTask" /><camunda:property name="requestType" value="DELETE_FILE_SERVICE_TASK" /></camunda:properties></bpmn:extensionElements><bpmn:incoming>Flow_1h81upf</bpmn:incoming><bpmn:outgoing>Flow_01cydca</bpmn:outgoing><bpmn:script>false</bpmn:script></bpmn:scriptTask><bpmn:scriptTask id="Activity_1m8ihng" name="Получаем текущую дату и время" scriptFormat="JavaScript" camunda:resultVariable="AnketaDateTime"><bpmn:incoming>Flow_0y15hgk</bpmn:incoming><bpmn:incoming>Flow_0tj4qfo</bpmn:incoming><bpmn:outgoing>Flow_0zhuxkn</bpmn:outgoing><bpmn:script>JSON.stringify(new Date()).replace(/"/g, '').substring(0, 19).replace('T', ' ')</bpmn:script></bpmn:scriptTask><bpmn:exclusiveGateway id="Gateway_0dfzoxs" default="Flow_1qxkc75"><bpmn:incoming>Flow_0mor03i</bpmn:incoming><bpmn:outgoing>Flow_1qxkc75</bpmn:outgoing><bpmn:outgoing>Flow_1d7p1v8</bpmn:outgoing></bpmn:exclusiveGateway><bpmn:serviceTask id="Activity_16a052a" name="Установка статуса &#34;Ошибка - не заполнен CIF&#34;"><bpmn:extensionElements><camunda:properties><camunda:property name="isEzdocServiceTask" value="true" /><camunda:property name="ezdocServiceTaskType" value="request" /><camunda:property name="requestType" value="GENERIC" /></camunda:properties><camunda:connector><camunda:inputOutput><camunda:inputParameter name="headers"><camunda:map><camunda:entry key="Accept">*/*</camunda:entry><camunda:entry key="Content-Type">application/json</camunda:entry></camunda:map></camunda:inputParameter><camunda:inputParameter name="url">${ezdocUrl}/api/camunda/instance/book/saveLabel/${instanceId}?label=Ошибка:+Не+заполнен+CIF</camunda:inputParameter><camunda:inputParameter name="method">POST</camunda:inputParameter><camunda:outputParameter name="Error">1</camunda:outputParameter></camunda:inputOutput><camunda:connectorId>http-connector</camunda:connectorId></camunda:connector></bpmn:extensionElements><bpmn:incoming>Flow_1d7p1v8</bpmn:incoming><bpmn:outgoing>Flow_1sw3wd5</bpmn:outgoing></bpmn:serviceTask><bpmn:serviceTask id="Activity_08l1c6n" name="Сообщаем об окончании процесса"><bpmn:extensionElements><camunda:connector><camunda:inputOutput><camunda:inputParameter name="url">${ezdocUrl}/api/camunda/instance/book/processCompleted/${instanceId}</camunda:inputParameter><camunda:inputParameter name="method">POST</camunda:inputParameter><camunda:inputParameter name="headers"><camunda:map><camunda:entry key="Accept">*/*</camunda:entry></camunda:map></camunda:inputParameter></camunda:inputOutput><camunda:connectorId>http-connector</camunda:connectorId></camunda:connector></bpmn:extensionElements><bpmn:incoming>Flow_1sw3wd5</bpmn:incoming><bpmn:outgoing>Flow_15jju16</bpmn:outgoing></bpmn:serviceTask><bpmn:endEvent id="Event_0wf263h"><bpmn:incoming>Flow_15jju16</bpmn:incoming></bpmn:endEvent><bpmn:serviceTask id="Activity_0ueg117" name="Ищем клиента"><bpmn:extensionElements><camunda:properties><camunda:property name="isEzdocServiceTask" value="true" /><camunda:property name="ezdocServiceTaskType" value="request" /><camunda:property name="requestType" value="GENERIC" /></camunda:properties><camunda:connector><camunda:inputOutput><camunda:inputParameter name="headers"><camunda:map><camunda:entry key="Accept">*/*</camunda:entry><camunda:entry key="Content-Type">application/json</camunda:entry></camunda:map></camunda:inputParameter><camunda:inputParameter name="url">${ezdocUrl}/api/camunda/common/executeRequest</camunda:inputParameter><camunda:inputParameter name="method">POST</camunda:inputParameter><camunda:inputParameter name="payload">{ 	"find": "individualPerson", 	
+
+"filter": 
+
+{
+
+"activityStatus": "ACTIVE", 
+
+"attributes.cifID": "${CIF}"
+
+},
+
+"projection": { 		"_id": 1 	}
+
+}</camunda:inputParameter><camunda:outputParameter name="ClientId"><camunda:script scriptFormat="javascript">try {
+
+JSON.parse(response).cursor.firstBatch[0]._id
+
+}
+
+catch (e)
+
+{
+
+"0"
+
+}</camunda:script></camunda:outputParameter><camunda:outputParameter name="isEmpty"><camunda:script scriptFormat="javascript">S(response)
+
+.prop("cursor")
+
+.prop("firstBatch").elements().isEmpty()</camunda:script></camunda:outputParameter></camunda:inputOutput><camunda:connectorId>http-connector</camunda:connectorId></camunda:connector></bpmn:extensionElements><bpmn:incoming>Flow_1qxkc75</bpmn:incoming><bpmn:outgoing>Flow_0d2um30</bpmn:outgoing></bpmn:serviceTask><bpmn:exclusiveGateway id="Gateway_0oxxtyt" default="Flow_1xa7k0g"><bpmn:incoming>Flow_0d2um30</bpmn:incoming><bpmn:outgoing>Flow_0r0cjxt</bpmn:outgoing><bpmn:outgoing>Flow_1xa7k0g</bpmn:outgoing></bpmn:exclusiveGateway><bpmn:serviceTask id="Activity_0o5di10" name="Создаем клиента (CIF)"><bpmn:extensionElements><camunda:connector><camunda:inputOutput><camunda:inputParameter name="url">${ezdocUrl}/api/integration/queue/INDIVIDUAL</camunda:inputParameter><camunda:inputParameter name="method">POST</camunda:inputParameter><camunda:inputParameter name="headers"><camunda:map><camunda:entry key="Accept">*/*</camunda:entry><camunda:entry key="Content-Type">application/json</camunda:entry></camunda:map></camunda:inputParameter><camunda:inputParameter name="payload">{
+	"attributes": {
+        "ShortName": "${CIF}",
+        "cifID": "${CIF}",
+        "SourceType": "Получен CIF"
+}
+}</camunda:inputParameter></camunda:inputOutput><camunda:connectorId>http-connector</camunda:connectorId></camunda:connector></bpmn:extensionElements><bpmn:incoming>Flow_0r0cjxt</bpmn:incoming><bpmn:outgoing>Flow_0nia4m1</bpmn:outgoing></bpmn:serviceTask><bpmn:scriptTask id="Activity_1aqbnmw" name="Признак ручного заполнения" scriptFormat="javascript" camunda:resultVariable="IsHandle"><bpmn:extensionElements><camunda:properties><camunda:property name="isEzdocTask" value="true" /><camunda:property name="ezdocServiceTaskType" value="deleteFileServiceTask" /><camunda:property name="requestType" value="DELETE_FILE_SERVICE_TASK" /></camunda:properties></bpmn:extensionElements><bpmn:incoming>Flow_0l4jmlr</bpmn:incoming><bpmn:incoming>Flow_01zzk5r</bpmn:incoming><bpmn:outgoing>Flow_1h81upf</bpmn:outgoing><bpmn:script>false</bpmn:script></bpmn:scriptTask><bpmn:scriptTask id="Activity_146eal9" name="Номер вопроса в виде строки" scriptFormat="javascript" camunda:resultVariable="i_str"><bpmn:extensionElements><camunda:properties><camunda:property name="isEzdocTask" value="true" /><camunda:property name="ezdocServiceTaskType" value="deleteFileServiceTask" /><camunda:property name="requestType" value="DELETE_FILE_SERVICE_TASK" /></camunda:properties></bpmn:extensionElements><bpmn:incoming>Flow_0l66w7w</bpmn:incoming><bpmn:outgoing>Flow_0dahdb7</bpmn:outgoing><bpmn:script>String(+i)</bpmn:script></bpmn:scriptTask><bpmn:serviceTask id="Activity_1buthwi" name="Ищем анкету"><bpmn:extensionElements><camunda:properties><camunda:property name="isEzdocServiceTask" value="true" /><camunda:property name="ezdocServiceTaskType" value="request" /><camunda:property name="requestType" value="GENERIC" /></camunda:properties><camunda:connector><camunda:inputOutput><camunda:inputParameter name="headers"><camunda:map><camunda:entry key="Accept">*/*</camunda:entry><camunda:entry key="Content-Type">application/json</camunda:entry></camunda:map></camunda:inputParameter><camunda:inputParameter name="url">${ezdocUrl}/api/camunda/common/executeRequest</camunda:inputParameter><camunda:inputParameter name="method">POST</camunda:inputParameter><camunda:inputParameter name="payload">{ 	"find": "book", 	
+
+"filter": 
+
+{
+
+"activityStatus": "ACTIVE", 
+
+"templatePrimaryId": "6177d80d4c940b7027413499", 
+
+"attributes.QuestionnairesNumber": "${QuestionnairesNumber}",
+
+"attributes.QuestionnairesType": "${QuestionnairesType}"
+
+},
+
+"projection": { 		"_id": 1 	}
+
+}</camunda:inputParameter><camunda:outputParameter name="QuestionnaireVersion_refid"><camunda:script scriptFormat="javascript">try {
+
+JSON.parse(response).cursor.firstBatch[0]._id
+
+}
+
+catch (e)
+
+{
+
+"0"
+
+}</camunda:script></camunda:outputParameter><camunda:outputParameter name="isEmpty"><camunda:script scriptFormat="javascript">S(response)
+
+.prop("cursor")
+
+.prop("firstBatch").elements().isEmpty()</camunda:script></camunda:outputParameter></camunda:inputOutput><camunda:connectorId>http-connector</camunda:connectorId></camunda:connector></bpmn:extensionElements><bpmn:incoming>Flow_05cdm7e</bpmn:incoming><bpmn:incoming>Flow_1yg90gq</bpmn:incoming><bpmn:outgoing>Flow_00x0nx8</bpmn:outgoing></bpmn:serviceTask><bpmn:serviceTask id="Activity_0nalclh" name="Шаг анкеты"><bpmn:extensionElements><camunda:connector><camunda:inputOutput><camunda:inputParameter name="url">${ezdocUrl}/api/mongo/executeRequest/getStepAnketaRisk</camunda:inputParameter><camunda:inputParameter name="method">POST</camunda:inputParameter><camunda:inputParameter name="headers"><camunda:map><camunda:entry key="Accept">*/*</camunda:entry><camunda:entry key="Content-Type">application/json</camunda:entry></camunda:map></camunda:inputParameter><camunda:inputParameter name="payload">{
+
+	"instanceId": "${instanceId}",
+
+	"qNum": "${i_str}"
+
+}</camunda:inputParameter><camunda:outputParameter name="Q_Result"><camunda:script scriptFormat="JavaScript">try {
+
+var q =
+
+JSON.parse(response).cursor.firstBatch[0].attributes
+
+} catch(e) {
+
+var q = " "
+
+}
+
+JSON.stringify(q);</camunda:script></camunda:outputParameter></camunda:inputOutput><camunda:connectorId>http-connector</camunda:connectorId></camunda:connector></bpmn:extensionElements><bpmn:incoming>Flow_0d86d58</bpmn:incoming><bpmn:outgoing>Flow_0l4jmlr</bpmn:outgoing></bpmn:serviceTask><bpmn:scriptTask id="Activity_1x7xchd" name="instanceId" scriptFormat="javascript" camunda:resultVariable="objectId"><bpmn:extensionElements><camunda:properties><camunda:property name="isEzdocTask" value="true" /><camunda:property name="ezdocServiceTaskType" value="deleteFileServiceTask" /><camunda:property name="requestType" value="DELETE_FILE_SERVICE_TASK" /></camunda:properties></bpmn:extensionElements><bpmn:incoming>Flow_0bwrr12</bpmn:incoming><bpmn:outgoing>Flow_0l66w7w</bpmn:outgoing><bpmn:script>instanceId</bpmn:script></bpmn:scriptTask><bpmn:serviceTask id="Activity_0l27v0k" name="Получаем значение параметров"><bpmn:extensionElements><camunda:properties><camunda:property name="isEzdocServiceTask" value="true" /><camunda:property name="ezdocServiceTaskType" value="request" /><camunda:property name="requestType" value="GENERIC" /></camunda:properties><camunda:connector><camunda:inputOutput><camunda:inputParameter name="headers"><camunda:map><camunda:entry key="Accept">*/*</camunda:entry><camunda:entry key="Content-Type">application/json</camunda:entry></camunda:map></camunda:inputParameter><camunda:inputParameter name="url">${ezdocUrl}/api/camunda/instance/book/${instanceId}/getAttributes?systemName=ProcessStep&amp;systemName=ResultDateTime&amp;systemName=RiskProfileNumber&amp;systemName=ProcessButton</camunda:inputParameter><camunda:inputParameter name="method">GET</camunda:inputParameter><camunda:outputParameter name="ProcessButton"><camunda:script scriptFormat="javascript">JSON.parse(response).ProcessButton</camunda:script></camunda:outputParameter><camunda:outputParameter name="ProcessStep"><camunda:script scriptFormat="javascript">JSON.parse(response).ProcessStep</camunda:script></camunda:outputParameter><camunda:outputParameter name="ResultDateTime"><camunda:script scriptFormat="javascript">JSON.parse(response).ResultDateTime</camunda:script></camunda:outputParameter><camunda:outputParameter name="Tolerance"><camunda:script scriptFormat="javascript">JSON.parse(response).RiskProfileNumber</camunda:script></camunda:outputParameter></camunda:inputOutput><camunda:connectorId>http-connector</camunda:connectorId></camunda:connector></bpmn:extensionElements><bpmn:incoming>Flow_0sd5jnm</bpmn:incoming><bpmn:incoming>Flow_1y30uun</bpmn:incoming><bpmn:outgoing>Flow_1ynessz</bpmn:outgoing></bpmn:serviceTask><bpmn:scriptTask id="Activity_1t1mze9" name="значение переменной i" scriptFormat="javascript" camunda:resultVariable="i"><bpmn:incoming>Flow_0vrj85l</bpmn:incoming><bpmn:outgoing>Flow_1uawyvx</bpmn:outgoing><bpmn:script>Math.round(Number(ProcessStep))</bpmn:script></bpmn:scriptTask><bpmn:exclusiveGateway id="Gateway_1jzsaqo" default="Flow_0vrj85l"><bpmn:incoming>Flow_1ynessz</bpmn:incoming><bpmn:outgoing>Flow_0vrj85l</bpmn:outgoing><bpmn:outgoing>Flow_1d66uja</bpmn:outgoing></bpmn:exclusiveGateway><bpmn:boundaryEvent id="Event_0ii7v7i" attachedToRef="Activity_0ktmbwj"><bpmn:outgoing>Flow_162vnzh</bpmn:outgoing><bpmn:errorEventDefinition id="ErrorEventDefinition_1f34hkq" /></bpmn:boundaryEvent><bpmn:sequenceFlow id="Flow_1i879xq" sourceRef="Event_1nyxd05" targetRef="Activity_0tgogd4" /><bpmn:sequenceFlow id="Flow_0gg8ixq" sourceRef="Activity_1xf37w9" targetRef="Activity_1trnm3q" /><bpmn:sequenceFlow id="Flow_01cydca" sourceRef="Activity_17y4ynu" targetRef="Activity_0x1zezh" /><bpmn:sequenceFlow id="Flow_162vnzh" sourceRef="Event_0ii7v7i" targetRef="Activity_0tgogd4" /><bpmn:sequenceFlow id="Flow_0mor03i" sourceRef="Activity_0tgogd4" targetRef="Gateway_0dfzoxs" /><bpmn:sequenceFlow id="Flow_0zhuxkn" sourceRef="Activity_1m8ihng" targetRef="Activity_0qkf749" /><bpmn:sequenceFlow id="Flow_0bwrr12" sourceRef="Activity_0qkf749" targetRef="Activity_1x7xchd" /><bpmn:sequenceFlow id="Flow_00x0nx8" sourceRef="Activity_1buthwi" targetRef="Gateway_0k7ag1f" /><bpmn:sequenceFlow id="Flow_0whjv01" sourceRef="Gateway_0k7ag1f" targetRef="Activity_1l5goux" /><bpmn:sequenceFlow id="Flow_14hg2xq" sourceRef="Gateway_0k7ag1f" targetRef="Activity_0c0xijz"><bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${isEmpty == true}</bpmn:conditionExpression></bpmn:sequenceFlow><bpmn:sequenceFlow id="Flow_0cusia7" sourceRef="Activity_0c0xijz" targetRef="Activity_0redwm1" /><bpmn:sequenceFlow id="Flow_08mc5nl" sourceRef="Activity_0redwm1" targetRef="Event_0b17b5w" /><bpmn:sequenceFlow id="Flow_06umeta" sourceRef="Activity_1l5goux" targetRef="Activity_0ktmbwj" /><bpmn:sequenceFlow id="Flow_1azbago" sourceRef="Activity_0ktmbwj" targetRef="Activity_07dljjt" /><bpmn:sequenceFlow id="Flow_0dahdb7" sourceRef="Activity_146eal9" targetRef="Activity_1xagp14" /><bpmn:sequenceFlow id="Flow_0d86d58" sourceRef="Activity_1trnm3q" targetRef="Activity_0nalclh" /><bpmn:sequenceFlow id="Flow_1h81upf" sourceRef="Activity_1aqbnmw" targetRef="Activity_17y4ynu" /><bpmn:sequenceFlow id="Flow_1uawyvx" sourceRef="Activity_1t1mze9" targetRef="Activity_1v8ehpt" /><bpmn:sequenceFlow id="Flow_1qxkc75" sourceRef="Gateway_0dfzoxs" targetRef="Activity_0ueg117" /><bpmn:sequenceFlow id="Flow_1d7p1v8" sourceRef="Gateway_0dfzoxs" targetRef="Activity_16a052a"><bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${CIF== null}</bpmn:conditionExpression></bpmn:sequenceFlow><bpmn:sequenceFlow id="Flow_1sw3wd5" sourceRef="Activity_16a052a" targetRef="Activity_08l1c6n" /><bpmn:sequenceFlow id="Flow_15jju16" sourceRef="Activity_08l1c6n" targetRef="Event_0wf263h" /><bpmn:sequenceFlow id="Flow_0d2um30" sourceRef="Activity_0ueg117" targetRef="Gateway_0oxxtyt" /><bpmn:sequenceFlow id="Flow_0r0cjxt" name="Клиент не найден" sourceRef="Gateway_0oxxtyt" targetRef="Activity_0o5di10"><bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${isEmpty == true}</bpmn:conditionExpression></bpmn:sequenceFlow><bpmn:sequenceFlow id="Flow_1xa7k0g" sourceRef="Gateway_0oxxtyt" targetRef="Activity_0bluqvk" /><bpmn:sequenceFlow id="Flow_0nia4m1" sourceRef="Activity_0o5di10" targetRef="Activity_1cnt2z1" /><bpmn:sequenceFlow id="Flow_0l4jmlr" sourceRef="Activity_0nalclh" targetRef="Activity_1aqbnmw" /><bpmn:sequenceFlow id="Flow_0l66w7w" sourceRef="Activity_1x7xchd" targetRef="Activity_146eal9" /><bpmn:sequenceFlow id="Flow_0vrj85l" name="Не последний шаг процесса" sourceRef="Gateway_1jzsaqo" targetRef="Activity_1t1mze9" /><bpmn:sequenceFlow id="Flow_1d66uja" name="Последний шаг процесса" sourceRef="Gateway_1jzsaqo" targetRef="Activity_1au4knw"><bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${ProcessButton == "FINISH" &amp;&amp; ProcessStep == QuestionsQuantity}</bpmn:conditionExpression></bpmn:sequenceFlow><bpmn:sequenceFlow id="Flow_1jpv05l" sourceRef="Activity_0x1zezh" targetRef="Gateway_1b3aimt" /><bpmn:serviceTask id="Activity_0b2y6tm" name="апдейтим клиента"><bpmn:extensionElements><camunda:connector><camunda:inputOutput><camunda:inputParameter name="url">${ezdocUrl}/api/integration/queue/INDIVIDUAL</camunda:inputParameter><camunda:inputParameter name="method">POST</camunda:inputParameter><camunda:inputParameter name="headers"><camunda:map><camunda:entry key="Accept">*/*</camunda:entry><camunda:entry key="Content-Type">application/json</camunda:entry></camunda:map></camunda:inputParameter><camunda:inputParameter name="payload">{
+	"attributes":{
+        "RiskProfileNumber": ${Tolerance},
+        "RiskProfilingId": "${instanceId}",
+        "RiskProfilingDateTime": "${ResultDateTime}",
+        "GuideSteps": ${GuideSteps11},
+        "cifID": "${CIF}"
+}
+}</camunda:inputParameter></camunda:inputOutput><camunda:connectorId>http-connector</camunda:connectorId></camunda:connector></bpmn:extensionElements><bpmn:incoming>Flow_18qwj3h</bpmn:incoming><bpmn:outgoing>Flow_0bairec</bpmn:outgoing></bpmn:serviceTask><bpmn:endEvent id="Event_05e0pdh" camunda:asyncBefore="true"><bpmn:incoming>Flow_0mmiaax</bpmn:incoming><bpmn:terminateEventDefinition id="TerminateEventDefinition_1i675sd" /></bpmn:endEvent><bpmn:sequenceFlow id="Flow_0366zxn" sourceRef="Activity_1xagp14" targetRef="Activity_0grzoj3" /><bpmn:scriptTask id="Activity_07dljjt" name="Приводим ответ к формату табличных блоков" scriptFormat="javascript" camunda:resultVariable="result"><bpmn:incoming>Flow_1azbago</bpmn:incoming><bpmn:outgoing>Flow_1lfm77i</bpmn:outgoing><bpmn:script>var anws = JSON.parse(answers);
+
+
+
+var q = new Object();
+
+var q1 = null;
+
+var q1_anws = [];
+
+var q2 = null;
+
+var q2_anws = [];
+
+var q3 = null;
+
+var q3_anws = [];
+
+var q4 = null;
+
+var q4_anws = [];
+
+var q5 = null;
+
+var q5_anws = [];
+
+var q6 = null;
+
+var q6_anws = [];
+
+var q7 = null;
+
+var q7_anws = [];
+
+var q8 = null;
+
+var q8_anws = [];
+
+var q9 = null;
+
+var q9_anws = [];
+
+var q10 = null;
+
+var q10_anws = [];
+
+
+
+try {
+
+	for (var i = 0; i &lt; anws.length; i++) {
+
+		var anw = anws[i];
+
+
+
+		if (anw["question"]["attributes"]["QuestionNumber"] == '1' ) {
+
+			if (q1 == null) {
+
+				q1 = 1;
+
+
+
+				q.Q_1_QuestionNumber = anw["question"]["attributes"]["QuestionNumber"];			
+
+				q.Q_1_AnswerType = anw["question"]["attributes"]["AnswerType"];	
+
+				q.Q_1_MultipleChoiceAnswer = anw["question"]["attributes"]["MultipleChoiceAnswer"];			
+
+				q.Q_1_Question = anw["question"]["attributes"]["Question"];	
+
+			}
+
+			
+
+			var q1_anw = new Object();
+
+			q1_anw.AnswerNumber = anw["answer"]["attributes"]["AnswerNumber"];
+
+			q1_anw.Answer = anw["answer"]["attributes"]["Answer"];
+
+			q1_anw.ResponseScore = anw["answer"]["attributes"]["ResponseScore"];
+
+q1_anw.Weight = anw["answer"]["attributes"]["Weight"];
+
+			q1_anw.Note = anw["answer"]["attributes"]["Note"]; 
+
+			
+
+			q1_anws.push(q1_anw);			
+
+		}
+
+
+
+		if (anw["question"]["attributes"]["QuestionNumber"] == '2' ) {
+
+			if (q2 == null) {
+
+				q2 = 1;
+
+
+
+				q.Q_2_QuestionNumber = anw["question"]["attributes"]["QuestionNumber"];			
+
+				q.Q_2_AnswerType = anw["question"]["attributes"]["AnswerType"];	
+
+				q.Q_2_MultipleChoiceAnswer = anw["question"]["attributes"]["MultipleChoiceAnswer"];			
+
+				q.Q_2_Question = anw["question"]["attributes"]["Question"];
+
+			}
+
+			
+
+			var q2_anw = new Object();
+
+			q2_anw.AnswerNumber = anw["answer"]["attributes"]["AnswerNumber"];
+
+			q2_anw.Answer = anw["answer"]["attributes"]["Answer"];
+
+			q2_anw.ResponseScore = anw["answer"]["attributes"]["ResponseScore"];
+
+q2_anw.Weight = anw["answer"]["attributes"]["Weight"];
+
+			q2_anw.Note = anw["answer"]["attributes"]["Note"]; 
+
+			
+
+			q2_anws.push(q2_anw);
+
+		}
+
+
+
+		if (anw["question"]["attributes"]["QuestionNumber"] == '3') {
+
+			if (q3 == null) {
+
+				q3 = 1;
+
+								q.Q_3_QuestionNumber = anw["question"]["attributes"]["QuestionNumber"];			
+
+				q.Q_3_AnswerType = anw["question"]["attributes"]["AnswerType"];	
+
+				q.Q_3_MultipleChoiceAnswer = anw["question"]["attributes"]["MultipleChoiceAnswer"];			
+
+				q.Q_3_Question = anw["question"]["attributes"]["Question"];
+
+			}				
+
+			
+
+			var q3_anw = new Object();
+
+			q3_anw.AnswerNumber = anw["answer"]["attributes"]["AnswerNumber"];
+
+			q3_anw.Answer = anw["answer"]["attributes"]["Answer"];
+
+			q3_anw.ResponseScore = anw["answer"]["attributes"]["ResponseScore"];
+
+q3_anw.Weight = anw["answer"]["attributes"]["Weight"];
+
+			q3_anw.Note = anw["answer"]["attributes"]["Note"]; 
+
+			
+
+			q3_anws.push(q3_anw);			
+
+		}
+
+
+
+		if (anw["question"]["attributes"]["QuestionNumber"] == '4' ) {
+
+			if (q4 == null) {
+
+				q4 = 1;
+
+
+
+				q.Q_4_QuestionNumber = anw["question"]["attributes"]["QuestionNumber"];			
+
+				q.Q_4_AnswerType = anw["question"]["attributes"]["AnswerType"];	
+
+				q.Q_4_MultipleChoiceAnswer = anw["question"]["attributes"]["MultipleChoiceAnswer"];			
+
+				q.Q_4_Question = anw["question"]["attributes"]["Question"];
+
+			}
+
+			
+
+			var q4_anw = new Object();
+
+			q4_anw.AnswerNumber = anw["answer"]["attributes"]["AnswerNumber"];
+
+			q4_anw.Answer = anw["answer"]["attributes"]["Answer"];
+
+			q4_anw.ResponseScore = anw["answer"]["attributes"]["ResponseScore"];
+
+q4_anw.Weight = anw["answer"]["attributes"]["Weight"];
+
+			q4_anw.Note = anw["answer"]["attributes"]["Note"]; 
+
+			
+
+			q4_anws.push(q4_anw);						
+
+		}
+
+		
+
+		if (anw["question"]["attributes"]["QuestionNumber"] == '5' ) {
+
+			if (q5 == null) {
+
+				q5 = 1;
+
+				
+
+				q.Q_5_QuestionNumber = anw["question"]["attributes"]["QuestionNumber"];			
+
+				q.Q_5_AnswerType = anw["question"]["attributes"]["AnswerType"];	
+
+				q.Q_5_MultipleChoiceAnswer = anw["question"]["attributes"]["MultipleChoiceAnswer"];			
+
+				q.Q_5_Question = anw["question"]["attributes"]["Question"];	
+
+			}
+
+			
+
+			var q5_anw = new Object();
+
+			q5_anw.AnswerNumber = anw["answer"]["attributes"]["AnswerNumber"];
+
+			q5_anw.Answer = anw["answer"]["attributes"]["Answer"];
+
+			q5_anw.ResponseScore = anw["answer"]["attributes"]["ResponseScore"];
+
+q5_anw.Weight = anw["answer"]["attributes"]["Weight"];
+
+			q5_anw.Note = anw["answer"]["attributes"]["Note"]; 
+
+			
+
+			q5_anws.push(q5_anw);									
+
+		}
+
+
+
+		if (anw["question"]["attributes"]["QuestionNumber"] == '6' ) {
+
+			if (q6 == null) {
+
+				q6 = 1;
+
+
+
+				q.Q_6_QuestionNumber = anw["question"]["attributes"]["QuestionNumber"];			
+
+				q.Q_6_AnswerType = anw["question"]["attributes"]["AnswerType"];	
+
+				q.Q_6_MultipleChoiceAnswer = anw["question"]["attributes"]["MultipleChoiceAnswer"];			
+
+				q.Q_6_Question = anw["question"]["attributes"]["Question"];	
+
+			}
+
+			var q6_anw = new Object();
+
+			q6_anw.AnswerNumber = anw["answer"]["attributes"]["AnswerNumber"];
+
+			q6_anw.Answer = anw["answer"]["attributes"]["Answer"];
+
+			q6_anw.ResponseScore = anw["answer"]["attributes"]["ResponseScore"];
+
+q6_anw.Weight = anw["answer"]["attributes"]["Weight"];
+
+			q6_anw.Note = anw["answer"]["attributes"]["Note"]; 
+
+			
+
+			q6_anws.push(q6_anw);									
+
+		}
+
+
+
+		if (anw["question"]["attributes"]["QuestionNumber"] == '7' ) {
+
+			if (q7 == null) {
+
+				q7 = 1;
+
+
+
+				q.Q_7_QuestionNumber = anw["question"]["attributes"]["QuestionNumber"];			
+
+				q.Q_7_AnswerType = anw["question"]["attributes"]["AnswerType"];	
+
+				q.Q_7_MultipleChoiceAnswer = anw["question"]["attributes"]["MultipleChoiceAnswer"];			
+
+				q.Q_7_Question = anw["question"]["attributes"]["Question"];	
+
+			}
+
+			var q7_anw = new Object();
+
+			q7_anw.AnswerNumber = anw["answer"]["attributes"]["AnswerNumber"];
+
+			q7_anw.Answer = anw["answer"]["attributes"]["Answer"];
+
+			q7_anw.ResponseScore = anw["answer"]["attributes"]["ResponseScore"];
+
+q7_anw.Weight = anw["answer"]["attributes"]["Weight"];
+
+			q7_anw.Note = anw["answer"]["attributes"]["Note"]; 
+
+			
+
+			q7_anws.push(q7_anw);												
+
+		}
+
+
+
+		if (anw["question"]["attributes"]["QuestionNumber"] == '8' ) {
+
+			if (q8 == null) {
+
+				q8 = 1;
+
+
+
+				q.Q_8_QuestionNumber = anw["question"]["attributes"]["QuestionNumber"];			
+
+				q.Q_8_AnswerType = anw["question"]["attributes"]["AnswerType"];	
+
+				q.Q_8_MultipleChoiceAnswer = anw["question"]["attributes"]["MultipleChoiceAnswer"];			
+
+				q.Q_8_Question = anw["question"]["attributes"]["Question"];
+
+			}
+
+			
+
+			var q8_anw = new Object();
+
+			q8_anw.AnswerNumber = anw["answer"]["attributes"]["AnswerNumber"];
+
+			q8_anw.Answer = anw["answer"]["attributes"]["Answer"];
+
+			q8_anw.ResponseScore = anw["answer"]["attributes"]["ResponseScore"];
+
+q8_anw.Weight = anw["answer"]["attributes"]["Weight"];
+
+			q8_anw.Note = anw["answer"]["attributes"]["Note"]; 
+
+			
+
+			q8_anws.push(q8_anw);
+
+		}
+
+
+
+		if (anw["question"]["attributes"]["QuestionNumber"] == '9' ) {
+
+			if (q9 == null) {
+
+				q9 = 1;
+
+
+
+				q.Q_9_QuestionNumber = anw["question"]["attributes"]["QuestionNumber"];			
+
+				q.Q_9_AnswerType = anw["question"]["attributes"]["AnswerType"];	
+
+				q.Q_9_MultipleChoiceAnswer = anw["question"]["attributes"]["MultipleChoiceAnswer"];			
+
+				q.Q_9_Question = anw["question"]["attributes"]["Question"];
+
+			}
+
+			
+
+			var q9_anw = new Object();
+
+			q9_anw.AnswerNumber = anw["answer"]["attributes"]["AnswerNumber"];
+
+			q9_anw.Answer = anw["answer"]["attributes"]["Answer"];
+
+			q9_anw.ResponseScore = anw["answer"]["attributes"]["ResponseScore"];
+
+q9_anw.Weight = anw["answer"]["attributes"]["Weight"];
+
+			q9_anw.Note = anw["answer"]["attributes"]["Note"]; 
+
+			
+
+			q9_anws.push(q9_anw);
+
+		}
+
+		if (anw["question"]["attributes"]["QuestionNumber"] == '10' ) {
+
+			if (q10 == null) {
+
+				q10 = 1;
+
+
+
+				q.Q_10_QuestionNumber = anw["question"]["attributes"]["QuestionNumber"];			
+
+				q.Q_10_AnswerType = anw["question"]["attributes"]["AnswerType"];	
+
+				q.Q_10_MultipleChoiceAnswer = anw["question"]["attributes"]["MultipleChoiceAnswer"];			
+
+				q.Q_10_Question = anw["question"]["attributes"]["Question"];
+
+			}
+
+			
+
+			var q10_anw = new Object();
+
+			q10_anw.AnswerNumber = anw["answer"]["attributes"]["AnswerNumber"];
+
+			q10_anw.Answer = anw["answer"]["attributes"]["Answer"];
+
+			q10_anw.ResponseScore = anw["answer"]["attributes"]["ResponseScore"];
+
+q10_anw.Weight = anw["answer"]["attributes"]["Weight"];
+
+			q10_anw.Note = anw["answer"]["attributes"]["Note"]; 
+
+			
+
+			q10_anws.push(q10_anw);
+
+		}
+
+		
+
+	}
+
+} catch (e)
+
+{
+
+		JSON.stringify([]);
+
+}
+
+
+
+q1_anws.sort(function(a, b){
+
+if (b.AnswerNumber &gt; a.AnswerNumber) {
+
+     	 	return -1;
+
+    }
+
+    if (b.AnswerNumber &lt; a.AnswerNumber) {
+
+      	return 1;
+
+    }
+
+}
+
+)
+
+q2_anws.sort(function(a, b){
+
+if (b.AnswerNumber &gt; a.AnswerNumber) {
+
+     	 	return -1;
+
+    }
+
+    if (b.AnswerNumber &lt; a.AnswerNumber) {
+
+      	return 1;
+
+    }
+
+}
+
+)
+
+q3_anws.sort(function(a, b){
+
+if (b.AnswerNumber &gt; a.AnswerNumber) {
+
+     	 	return -1;
+
+    }
+
+    if (b.AnswerNumber &lt; a.AnswerNumber) {
+
+      	return 1;
+
+    }
+
+}
+
+)
+
+q4_anws.sort(function(a, b){
+
+if (b.AnswerNumber &gt; a.AnswerNumber) {
+
+     	 	return -1;
+
+    }
+
+    if (b.AnswerNumber &lt; a.AnswerNumber) {
+
+      	return 1;
+
+    }
+
+}
+
+)
+
+q5_anws.sort(function(a, b){
+
+if (b.AnswerNumber &gt; a.AnswerNumber) {
+
+     	 	return -1;
+
+    }
+
+    if (b.AnswerNumber &lt; a.AnswerNumber) {
+
+      	return 1;
+
+    }
+
+}
+
+)
+
+q6_anws.sort(function(a, b){
+
+if (b.AnswerNumber &gt; a.AnswerNumber) {
+
+     	 	return -1;
+
+    }
+
+    if (b.AnswerNumber &lt; a.AnswerNumber) {
+
+      	return 1;
+
+    }
+
+}
+
+)
+
+q7_anws.sort(function(a, b){
+
+if (b.AnswerNumber &gt; a.AnswerNumber) {
+
+     	 	return -1;
+
+    }
+
+    if (b.AnswerNumber &lt; a.AnswerNumber) {
+
+      	return 1;
+
+    }
+
+}
+
+)
+
+q8_anws.sort(function(a, b){
+
+if (b.AnswerNumber &gt; a.AnswerNumber) {
+
+     	 	return -1;
+
+    }
+
+    if (b.AnswerNumber &lt; a.AnswerNumber) {
+
+      	return 1;
+
+    }
+
+}
+
+)
+
+q9_anws.sort(function(a, b){
+
+if (b.AnswerNumber &gt; a.AnswerNumber) {
+
+     	 	return -1;
+
+    }
+
+    if (b.AnswerNumber &lt; a.AnswerNumber) {
+
+      	return 1;
+
+    }
+
+}
+
+)
+
+q10_anws.sort(function(a, b){
+
+if (b.AnswerNumber &gt; a.AnswerNumber) {
+
+     	 	return -1;
+
+    }
+
+    if (b.AnswerNumber &lt; a.AnswerNumber) {
+
+      	return 1;
+
+    }
+
+}
+
+)
+
+
+
+q.Q_1_Answers = q1_anws; 
+
+q.Q_2_Answers = q2_anws; 
+
+q.Q_3_Answers = q3_anws; 
+
+q.Q_4_Answers = q4_anws; 
+
+q.Q_5_Answers = q5_anws; 
+
+q.Q_6_Answers = q6_anws; 
+
+q.Q_7_Answers = q7_anws; 
+
+q.Q_8_Answers = q8_anws; 
+
+q.Q_9_Answers = q9_anws; 
+
+q.Q_10_Answers = q10_anws; 
+
+JSON.stringify(q);</bpmn:script></bpmn:scriptTask><bpmn:sequenceFlow id="Flow_1lfm77i" sourceRef="Activity_07dljjt" targetRef="Activity_199djmm" /><bpmn:exclusiveGateway id="Gateway_1b3aimt" default="Flow_178yatd"><bpmn:incoming>Flow_1jpv05l</bpmn:incoming><bpmn:outgoing>Flow_178yatd</bpmn:outgoing><bpmn:outgoing>Flow_1y30uun</bpmn:outgoing></bpmn:exclusiveGateway><bpmn:serviceTask id="Activity_1f7d9j6" name="Статус: Незавершенная анкета"><bpmn:extensionElements><camunda:connector><camunda:inputOutput><camunda:inputParameter name="url">${ezdocUrl}/api/camunda/instance/book/saveLabel/${instanceId}?label=Незавершенная+анкета</camunda:inputParameter><camunda:inputParameter name="method">POST</camunda:inputParameter><camunda:inputParameter name="headers"><camunda:map><camunda:entry key="Accept">*/*</camunda:entry></camunda:map></camunda:inputParameter></camunda:inputOutput><camunda:connectorId>http-connector</camunda:connectorId></camunda:connector></bpmn:extensionElements><bpmn:incoming>Flow_178yatd</bpmn:incoming><bpmn:outgoing>Flow_0ltetah</bpmn:outgoing></bpmn:serviceTask><bpmn:serviceTask id="Activity_0apozs6" name="Сообщаем об окончании процесса"><bpmn:extensionElements><camunda:connector><camunda:inputOutput><camunda:inputParameter name="url">${ezdocUrl}/api/camunda/instance/book/processCompleted/${instanceId}</camunda:inputParameter><camunda:inputParameter name="method">POST</camunda:inputParameter><camunda:inputParameter name="headers"><camunda:map><camunda:entry key="Accept">*/*</camunda:entry></camunda:map></camunda:inputParameter></camunda:inputOutput><camunda:connectorId>http-connector</camunda:connectorId></camunda:connector></bpmn:extensionElements><bpmn:incoming>Flow_0ltetah</bpmn:incoming><bpmn:outgoing>Flow_0j55llv</bpmn:outgoing></bpmn:serviceTask><bpmn:endEvent id="Event_14l5qmf"><bpmn:incoming>Flow_0j55llv</bpmn:incoming></bpmn:endEvent><bpmn:sequenceFlow id="Flow_178yatd" sourceRef="Gateway_1b3aimt" targetRef="Activity_1f7d9j6" /><bpmn:sequenceFlow id="Flow_0ltetah" sourceRef="Activity_1f7d9j6" targetRef="Activity_0apozs6" /><bpmn:sequenceFlow id="Flow_0j55llv" sourceRef="Activity_0apozs6" targetRef="Event_14l5qmf" /><bpmn:sequenceFlow id="Flow_1y30uun" name="нет таймаута" sourceRef="Gateway_1b3aimt" targetRef="Activity_0l27v0k"><bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${timeout == false}</bpmn:conditionExpression></bpmn:sequenceFlow><bpmn:scriptTask id="Activity_1v8ehpt" name="Номер вопроса в виде строки" scriptFormat="javascript" camunda:resultVariable="i_str"><bpmn:extensionElements><camunda:properties><camunda:property name="isEzdocTask" value="true" /><camunda:property name="ezdocServiceTaskType" value="deleteFileServiceTask" /><camunda:property name="requestType" value="DELETE_FILE_SERVICE_TASK" /></camunda:properties></bpmn:extensionElements><bpmn:incoming>Flow_1uawyvx</bpmn:incoming><bpmn:outgoing>Flow_01zzk5r</bpmn:outgoing><bpmn:script>String(+i)</bpmn:script></bpmn:scriptTask><bpmn:sequenceFlow id="Flow_01zzk5r" sourceRef="Activity_1v8ehpt" targetRef="Activity_1aqbnmw" /><bpmn:serviceTask id="Activity_0grzoj3" name="Устанавливаем значение параметров"><bpmn:extensionElements><camunda:properties><camunda:property name="isEzdocServiceTask" value="true" /><camunda:property name="ezdocServiceTaskType" value="request" /><camunda:property name="requestType" value="GENERIC" /></camunda:properties><camunda:connector><camunda:inputOutput><camunda:inputParameter name="headers"><camunda:map><camunda:entry key="Accept">*/*</camunda:entry><camunda:entry key="Content-Type">application/json</camunda:entry></camunda:map></camunda:inputParameter><camunda:inputParameter name="url">${ezdocUrl}/api/camunda/instance/book/${instanceId}/setAttributes?esWaitUntil=true</camunda:inputParameter><camunda:inputParameter name="method">POST</camunda:inputParameter><camunda:inputParameter name="payload"><camunda:script scriptFormat="javascript">S("{}")
+
+.prop("ShortName","Тестирование")
+
+.toString()</camunda:script></camunda:inputParameter></camunda:inputOutput><camunda:connectorId>http-connector</camunda:connectorId></camunda:connector></bpmn:extensionElements><bpmn:incoming>Flow_0366zxn</bpmn:incoming><bpmn:outgoing>Flow_1bjhqu4</bpmn:outgoing></bpmn:serviceTask><bpmn:sequenceFlow id="Flow_1bjhqu4" sourceRef="Activity_0grzoj3" targetRef="Activity_0nav3yw" /><bpmn:scriptTask id="Activity_044h9xz" name="json" scriptFormat="JavaScript" camunda:resultVariable="GuideSteps11"><bpmn:incoming>Flow_1pvqpkk</bpmn:incoming><bpmn:outgoing>Flow_18qwj3h</bpmn:outgoing><bpmn:script>S(GST_Modified).prop("GuideSteps")</bpmn:script></bpmn:scriptTask><bpmn:scriptTask id="Activity_0v46ece" name="Меняем в табличном блоке строку по заданному номеру" camunda:asyncAfter="true" scriptFormat="javascript" camunda:resultVariable="GST_Modified"><bpmn:incoming>Flow_1yih8qx</bpmn:incoming><bpmn:outgoing>Flow_1pvqpkk</bpmn:outgoing><bpmn:script>var cop = new Object();
+
+var cop33 = [];
+
+cop.NumStep = 1;
+cop.NameProcessBar = StepName1;
+cop.StatusStep = true;
+cop.AnketaId = instanceId;
+cop.ResultDateTime = ResultDateTime;
+cop33[0] = cop;
+
+var cop2 = new Object();
+cop2.NumStep = 2;
+cop2.NameProcessBar = StepName2;
+cop2.StatusStep = false;
+cop2.AnketaId = null;
+cop2.ResultDateTime = null;
+cop33[1] = cop2;
+
+var cop3 = new Object();
+cop3.NumStep = 3;
+cop3.NameProcessBar = StepName3;
+cop3.StatusStep = false;
+cop3.AnketaId = null;
+cop3.ResultDateTime = null;
+cop33[2] = cop3;
+
+var cop4 = new Object();
+cop4.NumStep = 4;
+cop4.NameProcessBar = StepName4;
+cop4.StatusStep = false;
+cop4.AnketaId = null;
+cop4.ResultDateTime = null;
+cop33[3] = cop4;
+
+JSON.stringify(cop33);
+
+result = new Object();
+result.GuideSteps = cop33;
+JSON.stringify(result);</bpmn:script></bpmn:scriptTask><bpmn:sequenceFlow id="Flow_18qwj3h" sourceRef="Activity_044h9xz" targetRef="Activity_0b2y6tm" /><bpmn:sequenceFlow id="Flow_0bairec" sourceRef="Activity_0b2y6tm" targetRef="Gateway_192ybys" /><bpmn:serviceTask id="Activity_0l0kuxo" name="Ищем клиентские портфели данного клиента"><bpmn:extensionElements><camunda:properties><camunda:property name="isEzdocServiceTask" value="true" /><camunda:property name="ezdocServiceTaskType" value="request" /><camunda:property name="requestType" value="GENERIC" /></camunda:properties><camunda:connector><camunda:inputOutput><camunda:inputParameter name="headers"><camunda:map><camunda:entry key="Accept">*/*</camunda:entry><camunda:entry key="Content-Type">application/json</camunda:entry></camunda:map></camunda:inputParameter><camunda:inputParameter name="url">${ezdocUrl}/api/camunda/common/executeRequest</camunda:inputParameter><camunda:inputParameter name="method">POST</camunda:inputParameter><camunda:inputParameter name="payload">{ "find": "book", "filter": 
+{
+"$or": 
+[ 
+{
+"templatePrimaryId": "6167d4df7ef9df0776685460", 
+"activityStatus": "ACTIVE", 
+"attributes.cifID": "${CIF}", 
+"attributes.GuideSteps.0.StatusStep" : false
+}, 
+{
+"templatePrimaryId": "6167d4df7ef9df0776685460", 
+"activityStatus": "ACTIVE", 
+"attributes.cifID": "${CIF}", 
+"attributes.GuideSteps.0.StatusStep" : true,
+"attributes.GuideSteps.0.AnketaId" : {$ne: "${instanceId}" }
+}
+]
+},
+"projection": { "_id": 1 }
+}</camunda:inputParameter><camunda:outputParameter name="notFoundBook"><camunda:script scriptFormat="javascript">S(response)
+
+.prop("cursor")
+
+.prop("firstBatch").elements().isEmpty()</camunda:script></camunda:outputParameter><camunda:outputParameter name="BookId"><camunda:script scriptFormat="javascript">try {
+
+JSON.parse(response).cursor.firstBatch[0]._id
+
+}
+
+catch (e)
+
+{
+
+"0"
+
+}</camunda:script></camunda:outputParameter><camunda:outputParameter name="BookList"><camunda:script scriptFormat="javascript">S(response).prop("cursor")</camunda:script></camunda:outputParameter><camunda:outputParameter name="Qty"><camunda:script scriptFormat="javascript">S(response).prop("cursor").prop("firstBatch").elements().size()</camunda:script></camunda:outputParameter></camunda:inputOutput><camunda:connectorId>http-connector</camunda:connectorId></camunda:connector></bpmn:extensionElements><bpmn:incoming>Flow_0pxxrrl</bpmn:incoming><bpmn:incoming>Flow_0h07y8k</bpmn:incoming><bpmn:incoming>Flow_0l8yfyp</bpmn:incoming><bpmn:outgoing>Flow_15509la</bpmn:outgoing></bpmn:serviceTask><bpmn:exclusiveGateway id="Gateway_1uornou" default="Flow_1l530j3"><bpmn:incoming>Flow_15509la</bpmn:incoming><bpmn:outgoing>Flow_1l530j3</bpmn:outgoing><bpmn:outgoing>Flow_0mmiaax</bpmn:outgoing></bpmn:exclusiveGateway><bpmn:sequenceFlow id="Flow_1l530j3" sourceRef="Gateway_1uornou" targetRef="Activity_1v28020" /><bpmn:sequenceFlow id="Flow_15509la" sourceRef="Activity_0l0kuxo" targetRef="Gateway_1uornou" /><bpmn:sequenceFlow id="Flow_0mmiaax" sourceRef="Gateway_1uornou" targetRef="Event_05e0pdh"><bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${notFoundBook == true}</bpmn:conditionExpression></bpmn:sequenceFlow><bpmn:scriptTask id="Activity_1cnt2z1" name="Признак повторного риск-профилирования = false" scriptFormat="javascript" camunda:resultVariable="IsRepeat"><bpmn:extensionElements><camunda:properties><camunda:property name="isEzdocTask" value="true" /><camunda:property name="ezdocServiceTaskType" value="deleteFileServiceTask" /><camunda:property name="requestType" value="DELETE_FILE_SERVICE_TASK" /></camunda:properties></bpmn:extensionElements><bpmn:incoming>Flow_0nia4m1</bpmn:incoming><bpmn:incoming>Flow_1vp72w1</bpmn:incoming><bpmn:incoming>Flow_1tr0ovd</bpmn:incoming><bpmn:incoming>Flow_17v0b5b</bpmn:incoming><bpmn:outgoing>Flow_05cdm7e</bpmn:outgoing><bpmn:script>false</bpmn:script></bpmn:scriptTask><bpmn:sequenceFlow id="Flow_05cdm7e" sourceRef="Activity_1cnt2z1" targetRef="Activity_1buthwi" /><bpmn:scriptTask id="Activity_13lm9tb" name="Признак повторного риск-профилирования = true" scriptFormat="javascript" camunda:resultVariable="IsRepeat"><bpmn:extensionElements><camunda:properties><camunda:property name="isEzdocTask" value="true" /><camunda:property name="ezdocServiceTaskType" value="deleteFileServiceTask" /><camunda:property name="requestType" value="DELETE_FILE_SERVICE_TASK" /></camunda:properties></bpmn:extensionElements><bpmn:incoming>Flow_1cchl6r</bpmn:incoming><bpmn:outgoing>Flow_1yg90gq</bpmn:outgoing><bpmn:script>true</bpmn:script></bpmn:scriptTask><bpmn:serviceTask id="Activity_0bluqvk" name="Получаем риск-профиль клиента и анкету"><bpmn:extensionElements><camunda:properties><camunda:property name="isEzdocServiceTask" value="true" /><camunda:property name="ezdocServiceTaskType" value="request" /><camunda:property name="requestType" value="GENERIC" /></camunda:properties><camunda:connector><camunda:inputOutput><camunda:inputParameter name="headers"><camunda:map><camunda:entry key="Accept">*/*</camunda:entry><camunda:entry key="Content-Type">application/json</camunda:entry></camunda:map></camunda:inputParameter><camunda:inputParameter name="method">GET</camunda:inputParameter><camunda:inputParameter name="url">${ezdocUrl}/api/camunda/instance/individual/${ClientId}/getAttributes?systemName=RiskProfileNumber&amp;systemName=RiskProfilingId</camunda:inputParameter><camunda:outputParameter name="RiskProfileNumberOld"><camunda:script scriptFormat="javascript">JSON.parse(response).RiskProfileNumber</camunda:script></camunda:outputParameter><camunda:outputParameter name="RiskProfilingId"><camunda:script scriptFormat="javascript">JSON.parse(response).RiskProfilingId</camunda:script></camunda:outputParameter></camunda:inputOutput><camunda:connectorId>http-connector</camunda:connectorId></camunda:connector></bpmn:extensionElements><bpmn:incoming>Flow_1xa7k0g</bpmn:incoming><bpmn:outgoing>Flow_08n5g48</bpmn:outgoing></bpmn:serviceTask><bpmn:sequenceFlow id="Flow_08n5g48" sourceRef="Activity_0bluqvk" targetRef="Gateway_0h8hoge" /><bpmn:exclusiveGateway id="Gateway_0h8hoge" default="Flow_09q88e9"><bpmn:incoming>Flow_08n5g48</bpmn:incoming><bpmn:outgoing>Flow_09q88e9</bpmn:outgoing><bpmn:outgoing>Flow_1vp72w1</bpmn:outgoing></bpmn:exclusiveGateway><bpmn:sequenceFlow id="Flow_09q88e9" sourceRef="Gateway_0h8hoge" targetRef="Activity_1vxjyxu" /><bpmn:sequenceFlow id="Flow_1vp72w1" sourceRef="Gateway_0h8hoge" targetRef="Activity_1cnt2z1"><bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${RiskProfilingId == null}</bpmn:conditionExpression></bpmn:sequenceFlow><bpmn:serviceTask id="Activity_1vxjyxu" name="Ищем анкету"><bpmn:extensionElements><camunda:properties><camunda:property name="isEzdocServiceTask" value="true" /><camunda:property name="ezdocServiceTaskType" value="request" /><camunda:property name="requestType" value="GENERIC" /></camunda:properties><camunda:connector><camunda:inputOutput><camunda:inputParameter name="headers"><camunda:map><camunda:entry key="Accept">*/*</camunda:entry><camunda:entry key="Content-Type">application/json</camunda:entry></camunda:map></camunda:inputParameter><camunda:inputParameter name="url">${ezdocUrl}/api/camunda/common/executeRequest</camunda:inputParameter><camunda:inputParameter name="method">POST</camunda:inputParameter><camunda:inputParameter name="payload">{ 	"find": "book", 	
+
+"filter": 
+
+{
+
+"activityStatus": "ACTIVE", 
+
+"attributes.cifID": "${CIF}",
+
+"attributes.objectId": "${RiskProfilingId}",
+
+},
+
+"projection": { 		"_id": 1 	}
+
+}</camunda:inputParameter><camunda:outputParameter name="OldOrderId"><camunda:script scriptFormat="javascript">try {
+
+JSON.parse(response).cursor.firstBatch[0]._id
+
+}
+
+catch (e)
+
+{
+
+"0"
+
+}</camunda:script></camunda:outputParameter><camunda:outputParameter name="isEmpty"><camunda:script scriptFormat="javascript">S(response)
+
+.prop("cursor")
+
+.prop("firstBatch").elements().isEmpty()</camunda:script></camunda:outputParameter></camunda:inputOutput><camunda:connectorId>http-connector</camunda:connectorId></camunda:connector></bpmn:extensionElements><bpmn:incoming>Flow_09q88e9</bpmn:incoming><bpmn:outgoing>Flow_0omupub</bpmn:outgoing></bpmn:serviceTask><bpmn:sequenceFlow id="Flow_0omupub" sourceRef="Activity_1vxjyxu" targetRef="Gateway_1hcflp1" /><bpmn:exclusiveGateway id="Gateway_1hcflp1" default="Flow_167la7o"><bpmn:incoming>Flow_0omupub</bpmn:incoming><bpmn:outgoing>Flow_167la7o</bpmn:outgoing><bpmn:outgoing>Flow_1tr0ovd</bpmn:outgoing></bpmn:exclusiveGateway><bpmn:sequenceFlow id="Flow_167la7o" sourceRef="Gateway_1hcflp1" targetRef="Activity_03gc27k" /><bpmn:sequenceFlow id="Flow_1tr0ovd" sourceRef="Gateway_1hcflp1" targetRef="Activity_1cnt2z1"><bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${isEmpty == true}</bpmn:conditionExpression></bpmn:sequenceFlow><bpmn:sequenceFlow id="Flow_1yg90gq" sourceRef="Activity_13lm9tb" targetRef="Activity_1buthwi" /><bpmn:exclusiveGateway id="Gateway_0416qk2" default="Flow_1cchl6r"><bpmn:incoming>Flow_0fjjcyv</bpmn:incoming><bpmn:outgoing>Flow_1cchl6r</bpmn:outgoing><bpmn:outgoing>Flow_17v0b5b</bpmn:outgoing></bpmn:exclusiveGateway><bpmn:sequenceFlow id="Flow_1cchl6r" sourceRef="Gateway_0416qk2" targetRef="Activity_13lm9tb" /><bpmn:serviceTask id="Activity_03gc27k" name="Получаем значение ответов предыдущего РП"><bpmn:extensionElements><camunda:properties><camunda:property name="isEzdocServiceTask" value="true" /><camunda:property name="ezdocServiceTaskType" value="request" /><camunda:property name="requestType" value="GENERIC" /></camunda:properties><camunda:connector><camunda:inputOutput><camunda:inputParameter name="headers"><camunda:map><camunda:entry key="Accept">*/*</camunda:entry><camunda:entry key="Content-Type">application/json</camunda:entry></camunda:map></camunda:inputParameter><camunda:inputParameter name="url">${ezdocUrl}/api/camunda/instance/book/${OldOrderId}/getAttributes?systemName=Q_1_Answer&amp;systemName=Q_2_Answer&amp;systemName=Q_3_Answer&amp;systemName=Q_4_Answer&amp;systemName=Q_5_Answer&amp;systemName=Q_6_Answer&amp;systemName=Q_7_Answer&amp;systemName=Q_8_Answer&amp;systemName=Q_9_Answer&amp;systemName=Q_10_Answer</camunda:inputParameter><camunda:inputParameter name="method">GET</camunda:inputParameter><camunda:outputParameter name="Ans_1_Old"><camunda:script scriptFormat="javascript">JSON.parse(response).Q_1_Answer</camunda:script></camunda:outputParameter><camunda:outputParameter name="Ans_2_Old"><camunda:script scriptFormat="javascript">JSON.parse(response).Q_2_Answer</camunda:script></camunda:outputParameter><camunda:outputParameter name="Ans_3_Old"><camunda:script scriptFormat="javascript">JSON.parse(response).Q_3_Answer</camunda:script></camunda:outputParameter><camunda:outputParameter name="Ans_4_Old"><camunda:script scriptFormat="javascript">JSON.parse(response).Q_4_Answer</camunda:script></camunda:outputParameter><camunda:outputParameter name="Ans_5_Old"><camunda:script scriptFormat="javascript">JSON.parse(response).Q_5_Answer</camunda:script></camunda:outputParameter><camunda:outputParameter name="Ans_6_Old"><camunda:script scriptFormat="javascript">JSON.parse(response).Q_6_Answer</camunda:script></camunda:outputParameter><camunda:outputParameter name="Ans_7_Old"><camunda:script scriptFormat="javascript">JSON.parse(response).Q_7_Answer</camunda:script></camunda:outputParameter><camunda:outputParameter name="Ans_8_Old"><camunda:script scriptFormat="javascript">JSON.parse(response).Q_8_Answer</camunda:script></camunda:outputParameter><camunda:outputParameter name="Ans_9_Old"><camunda:script scriptFormat="javascript">JSON.parse(response).Q_9_Answer</camunda:script></camunda:outputParameter><camunda:outputParameter name="Ans_10_Old"><camunda:script scriptFormat="javascript">JSON.parse(response).Q_10_Answer</camunda:script></camunda:outputParameter></camunda:inputOutput><camunda:connectorId>http-connector</camunda:connectorId></camunda:connector></bpmn:extensionElements><bpmn:incoming>Flow_167la7o</bpmn:incoming><bpmn:outgoing>Flow_0fjjcyv</bpmn:outgoing></bpmn:serviceTask><bpmn:sequenceFlow id="Flow_0fjjcyv" sourceRef="Activity_03gc27k" targetRef="Gateway_0416qk2" /><bpmn:sequenceFlow id="Flow_17v0b5b" sourceRef="Gateway_0416qk2" targetRef="Activity_1cnt2z1"><bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${Ans_1_Old == null || Ans_2_Old == null || Ans_3_Old == null || Ans_4_Old == null || Ans_5_Old == null || Ans_6_Old == null || Ans_7_Old == null || Ans_8_Old == null || Ans_9_Old == null || Ans_10_Old == null}</bpmn:conditionExpression></bpmn:sequenceFlow><bpmn:serviceTask id="Activity_1o05dok" name="Получаем значение ответов текущего РП"><bpmn:extensionElements><camunda:properties><camunda:property name="isEzdocServiceTask" value="true" /><camunda:property name="ezdocServiceTaskType" value="request" /><camunda:property name="requestType" value="GENERIC" /></camunda:properties><camunda:connector><camunda:inputOutput><camunda:inputParameter name="headers"><camunda:map><camunda:entry key="Accept">*/*</camunda:entry><camunda:entry key="Content-Type">application/json</camunda:entry></camunda:map></camunda:inputParameter><camunda:inputParameter name="url">${ezdocUrl}/api/camunda/instance/book/${instanceId}/getAttributes?systemName=Q_1_Answer&amp;systemName=Q_2_Answer&amp;systemName=Q_3_Answer&amp;systemName=Q_4_Answer&amp;systemName=Q_5_Answer&amp;systemName=Q_6_Answer&amp;systemName=Q_7_Answer&amp;systemName=Q_8_Answer&amp;systemName=Q_9_Answer&amp;systemName=Q_10_Answer</camunda:inputParameter><camunda:inputParameter name="method">GET</camunda:inputParameter><camunda:outputParameter name="Ans_1_New"><camunda:script scriptFormat="javascript">JSON.parse(response).Q_1_Answer</camunda:script></camunda:outputParameter><camunda:outputParameter name="Ans_2_New"><camunda:script scriptFormat="javascript">JSON.parse(response).Q_2_Answer</camunda:script></camunda:outputParameter><camunda:outputParameter name="Ans_3_New"><camunda:script scriptFormat="javascript">JSON.parse(response).Q_3_Answer</camunda:script></camunda:outputParameter><camunda:outputParameter name="Ans_4_New"><camunda:script scriptFormat="javascript">JSON.parse(response).Q_4_Answer</camunda:script></camunda:outputParameter><camunda:outputParameter name="Ans_5_New"><camunda:script scriptFormat="javascript">JSON.parse(response).Q_5_Answer</camunda:script></camunda:outputParameter><camunda:outputParameter name="Ans_6_New"><camunda:script scriptFormat="javascript">JSON.parse(response).Q_6_Answer</camunda:script></camunda:outputParameter><camunda:outputParameter name="Ans_7_New"><camunda:script scriptFormat="javascript">JSON.parse(response).Q_7_Answer</camunda:script></camunda:outputParameter><camunda:outputParameter name="Ans_8_New"><camunda:script scriptFormat="javascript">JSON.parse(response).Q_8_Answer</camunda:script></camunda:outputParameter><camunda:outputParameter name="Ans_9_New"><camunda:script scriptFormat="javascript">JSON.parse(response).Q_9_Answer</camunda:script></camunda:outputParameter><camunda:outputParameter name="Ans_10_New"><camunda:script scriptFormat="javascript">JSON.parse(response).Q_10_Answer</camunda:script></camunda:outputParameter></camunda:inputOutput><camunda:connectorId>http-connector</camunda:connectorId></camunda:connector></bpmn:extensionElements><bpmn:incoming>Flow_0yrzm62</bpmn:incoming><bpmn:outgoing>Flow_1djkay4</bpmn:outgoing></bpmn:serviceTask><bpmn:exclusiveGateway id="Gateway_192ybys" default="Flow_0irbu79"><bpmn:incoming>Flow_0bairec</bpmn:incoming><bpmn:outgoing>Flow_0yrzm62</bpmn:outgoing><bpmn:outgoing>Flow_0irbu79</bpmn:outgoing></bpmn:exclusiveGateway><bpmn:sequenceFlow id="Flow_0yrzm62" sourceRef="Gateway_192ybys" targetRef="Activity_1o05dok"><bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${IsRepeat  == 'true'}</bpmn:conditionExpression></bpmn:sequenceFlow><bpmn:sequenceFlow id="Flow_0irbu79" sourceRef="Gateway_192ybys" targetRef="Activity_0hg950t" /><bpmn:exclusiveGateway id="Gateway_1ulu3fw" default="Flow_1gwsii2"><bpmn:incoming>Flow_1djkay4</bpmn:incoming><bpmn:outgoing>Flow_1gwsii2</bpmn:outgoing><bpmn:outgoing>Flow_0va8uzi</bpmn:outgoing></bpmn:exclusiveGateway><bpmn:sequenceFlow id="Flow_1djkay4" sourceRef="Activity_1o05dok" targetRef="Gateway_1ulu3fw" /><bpmn:scriptTask id="Activity_0hg950t" name="Ожидает согласования = 0" scriptFormat="javascript" camunda:resultVariable="WaitingAccept"><bpmn:extensionElements><camunda:properties><camunda:property name="isEzdocTask" value="true" /><camunda:property name="ezdocServiceTaskType" value="deleteFileServiceTask" /><camunda:property name="requestType" value="DELETE_FILE_SERVICE_TASK" /></camunda:properties></bpmn:extensionElements><bpmn:incoming>Flow_0irbu79</bpmn:incoming><bpmn:outgoing>Flow_0pxxrrl</bpmn:outgoing><bpmn:script>0</bpmn:script></bpmn:scriptTask><bpmn:sequenceFlow id="Flow_0pxxrrl" sourceRef="Activity_0hg950t" targetRef="Activity_0l0kuxo" /><bpmn:scriptTask id="Activity_1450qch" name="Ожидает согласования = 1" scriptFormat="javascript" camunda:resultVariable="WaitingAccept"><bpmn:extensionElements><camunda:properties><camunda:property name="isEzdocTask" value="true" /><camunda:property name="ezdocServiceTaskType" value="deleteFileServiceTask" /><camunda:property name="requestType" value="DELETE_FILE_SERVICE_TASK" /></camunda:properties></bpmn:extensionElements><bpmn:incoming>Flow_1gwsii2</bpmn:incoming><bpmn:outgoing>Flow_0h07y8k</bpmn:outgoing><bpmn:script>1</bpmn:script></bpmn:scriptTask><bpmn:sequenceFlow id="Flow_1gwsii2" sourceRef="Gateway_1ulu3fw" targetRef="Activity_1450qch" /><bpmn:scriptTask id="Activity_0h53e90" name="Ожидает согласования = 0" scriptFormat="javascript" camunda:resultVariable="WaitingAccept"><bpmn:extensionElements><camunda:properties><camunda:property name="isEzdocTask" value="true" /><camunda:property name="ezdocServiceTaskType" value="deleteFileServiceTask" /><camunda:property name="requestType" value="DELETE_FILE_SERVICE_TASK" /></camunda:properties></bpmn:extensionElements><bpmn:incoming>Flow_0va8uzi</bpmn:incoming><bpmn:outgoing>Flow_0l8yfyp</bpmn:outgoing><bpmn:script>0</bpmn:script></bpmn:scriptTask><bpmn:sequenceFlow id="Flow_0va8uzi" sourceRef="Gateway_1ulu3fw" targetRef="Activity_0h53e90"><bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${Ans_1_New == Ans_1_Old &amp;&amp; Ans_2_New == Ans_2_Old &amp;&amp; Ans_3_New == Ans_3_Old &amp;&amp; Ans_4_New == Ans_4_Old &amp;&amp; Ans_5_New == Ans_5_Old &amp;&amp; Ans_6_New == Ans_6_Old &amp;&amp; Ans_7_New == Ans_7_Old &amp;&amp; Ans_8_New == Ans_8_Old &amp;&amp; Ans_9_New == Ans_9_Old &amp;&amp; Ans_10_New == Ans_10_Old}</bpmn:conditionExpression></bpmn:sequenceFlow><bpmn:sequenceFlow id="Flow_0l8yfyp" sourceRef="Activity_0h53e90" targetRef="Activity_0l0kuxo" /><bpmn:sequenceFlow id="Flow_0h07y8k" sourceRef="Activity_1450qch" targetRef="Activity_0l0kuxo" /><bpmn:subProcess id="Activity_1au4knw"><bpmn:incoming>Flow_1d66uja</bpmn:incoming><bpmn:outgoing>Flow_1ph69re</bpmn:outgoing><bpmn:startEvent id="Event_06tl1ch"><bpmn:outgoing>Flow_1kev2sb</bpmn:outgoing></bpmn:startEvent><bpmn:sequenceFlow id="Flow_1kev2sb" sourceRef="Event_06tl1ch" targetRef="Gateway_0nekxma" /><bpmn:parallelGateway id="Gateway_0nekxma"><bpmn:incoming>Flow_1kev2sb</bpmn:incoming><bpmn:outgoing>Flow_0aass39</bpmn:outgoing><bpmn:outgoing>Flow_1i8wsso</bpmn:outgoing></bpmn:parallelGateway><bpmn:intermediateCatchEvent id="Event_0n8tbd3"><bpmn:incoming>Flow_0aass39</bpmn:incoming><bpmn:outgoing>Flow_033wel3</bpmn:outgoing><bpmn:timerEventDefinition id="TimerEventDefinition_1ja8mnj"><bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT60000S</bpmn:timeDuration></bpmn:timerEventDefinition></bpmn:intermediateCatchEvent><bpmn:sequenceFlow id="Flow_0aass39" sourceRef="Gateway_0nekxma" targetRef="Event_0n8tbd3" /><bpmn:serviceTask id="Activity_1m6wg9r" name="Установка статуса Завершено без выбора риск-профиля"><bpmn:extensionElements><camunda:properties><camunda:property name="isEzdocServiceTask" value="true" /><camunda:property name="ezdocServiceTaskType" value="request" /><camunda:property name="requestType" value="GENERIC" /></camunda:properties><camunda:connector><camunda:inputOutput><camunda:inputParameter name="headers"><camunda:map><camunda:entry key="Accept">*/*</camunda:entry><camunda:entry key="Content-Type">application/json</camunda:entry></camunda:map></camunda:inputParameter><camunda:inputParameter name="url">${ezdocUrl}/api/camunda/instance/book/saveLabel/${instanceId}?label=Завершено+без+выбора+риск-профиля</camunda:inputParameter><camunda:inputParameter name="method">POST</camunda:inputParameter><camunda:outputParameter name="Error">1</camunda:outputParameter></camunda:inputOutput><camunda:connectorId>http-connector</camunda:connectorId></camunda:connector></bpmn:extensionElements><bpmn:incoming>Flow_033wel3</bpmn:incoming><bpmn:outgoing>Flow_16dchxw</bpmn:outgoing></bpmn:serviceTask><bpmn:sequenceFlow id="Flow_033wel3" sourceRef="Event_0n8tbd3" targetRef="Activity_1m6wg9r" /><bpmn:serviceTask id="Activity_1mke4k1" name="Таймаут?" camunda:expression="true" camunda:resultVariable="timeout"><bpmn:incoming>Flow_16dchxw</bpmn:incoming><bpmn:outgoing>Flow_0rrb0fh</bpmn:outgoing></bpmn:serviceTask><bpmn:sequenceFlow id="Flow_16dchxw" sourceRef="Activity_1m6wg9r" targetRef="Activity_1mke4k1" /><bpmn:sequenceFlow id="Flow_0rrb0fh" sourceRef="Activity_1mke4k1" targetRef="Event_19ei984" /><bpmn:endEvent id="Event_19ei984"><bpmn:incoming>Flow_0rrb0fh</bpmn:incoming><bpmn:terminateEventDefinition id="TerminateEventDefinition_0rmi109" /></bpmn:endEvent><bpmn:serviceTask id="Activity_1176shs" name="Таймаут?" camunda:expression="false" camunda:resultVariable="timeout"><bpmn:incoming>Flow_0c8iv6s</bpmn:incoming><bpmn:outgoing>Flow_1vvyqdm</bpmn:outgoing></bpmn:serviceTask><bpmn:sequenceFlow id="Flow_1i8wsso" sourceRef="Gateway_0nekxma" targetRef="Event_10dpt14" /><bpmn:intermediateCatchEvent id="Event_10dpt14"><bpmn:incoming>Flow_1i8wsso</bpmn:incoming><bpmn:outgoing>Flow_1iekn1d</bpmn:outgoing><bpmn:signalEventDefinition id="SignalEventDefinition_1crp3kx" signalRef="Signal_1ces4he" /></bpmn:intermediateCatchEvent><bpmn:sequenceFlow id="Flow_1iekn1d" sourceRef="Event_10dpt14" targetRef="Activity_14vkbp3" /><bpmn:sequenceFlow id="Flow_1vvyqdm" sourceRef="Activity_1176shs" targetRef="Event_1vbik1n" /><bpmn:endEvent id="Event_1vbik1n"><bpmn:incoming>Flow_1vvyqdm</bpmn:incoming><bpmn:terminateEventDefinition id="TerminateEventDefinition_1ers1bm" /></bpmn:endEvent><bpmn:serviceTask id="Activity_14vkbp3" name="Получаем значение  флага подписания ПЭП"><bpmn:extensionElements><camunda:properties><camunda:property name="isEzdocServiceTask" value="true" /><camunda:property name="ezdocServiceTaskType" value="request" /><camunda:property name="requestType" value="GENERIC" /></camunda:properties><camunda:connector><camunda:inputOutput><camunda:inputParameter name="headers"><camunda:map><camunda:entry key="Accept">*/*</camunda:entry><camunda:entry key="Content-Type">application/json</camunda:entry></camunda:map></camunda:inputParameter><camunda:inputParameter name="url">${ezdocUrl}/api/camunda/instance/book/${instanceId}/getAttributes?systemName=Signed</camunda:inputParameter><camunda:inputParameter name="method">GET</camunda:inputParameter><camunda:outputParameter name="Signed"><camunda:script scriptFormat="javascript">JSON.parse(response).Signed</camunda:script></camunda:outputParameter></camunda:inputOutput><camunda:connectorId>http-connector</camunda:connectorId></camunda:connector></bpmn:extensionElements><bpmn:incoming>Flow_1iekn1d</bpmn:incoming><bpmn:outgoing>Flow_0c8iv6s</bpmn:outgoing></bpmn:serviceTask><bpmn:sequenceFlow id="Flow_0c8iv6s" sourceRef="Activity_14vkbp3" targetRef="Activity_1176shs" /></bpmn:subProcess><bpmn:exclusiveGateway id="Gateway_0255bha" default="Flow_155kkx0"><bpmn:incoming>Flow_1ph69re</bpmn:incoming><bpmn:outgoing>Flow_155kkx0</bpmn:outgoing><bpmn:outgoing>Flow_1fohvjo</bpmn:outgoing></bpmn:exclusiveGateway><bpmn:sequenceFlow id="Flow_1ph69re" sourceRef="Activity_1au4knw" targetRef="Gateway_0255bha" /><bpmn:endEvent id="Event_1y8a2mg"><bpmn:incoming>Flow_00cp1wm</bpmn:incoming><bpmn:terminateEventDefinition id="TerminateEventDefinition_0z0bt6p" /></bpmn:endEvent><bpmn:serviceTask id="Activity_1ykdepm" name="Сообщаем об окончании процесса"><bpmn:extensionElements><camunda:connector><camunda:inputOutput><camunda:inputParameter name="url">${ezdocUrl}/api/camunda/instance/book/processCompleted/${instanceId}</camunda:inputParameter><camunda:inputParameter name="method">POST</camunda:inputParameter><camunda:inputParameter name="headers"><camunda:map><camunda:entry key="Accept">*/*</camunda:entry></camunda:map></camunda:inputParameter></camunda:inputOutput><camunda:connectorId>http-connector</camunda:connectorId></camunda:connector></bpmn:extensionElements><bpmn:incoming>Flow_155kkx0</bpmn:incoming><bpmn:outgoing>Flow_00cp1wm</bpmn:outgoing></bpmn:serviceTask><bpmn:sequenceFlow id="Flow_00cp1wm" sourceRef="Activity_1ykdepm" targetRef="Event_1y8a2mg" /><bpmn:sequenceFlow id="Flow_155kkx0" sourceRef="Gateway_0255bha" targetRef="Activity_1ykdepm" /><bpmn:exclusiveGateway id="Gateway_01w1s27" default="Flow_1sqac1u"><bpmn:incoming>Flow_1fohvjo</bpmn:incoming><bpmn:outgoing>Flow_1yih8qx</bpmn:outgoing><bpmn:outgoing>Flow_1sqac1u</bpmn:outgoing></bpmn:exclusiveGateway><bpmn:sequenceFlow id="Flow_1fohvjo" sourceRef="Gateway_0255bha" targetRef="Gateway_01w1s27"><bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${timeout == false || timeout == 'false'}</bpmn:conditionExpression></bpmn:sequenceFlow><bpmn:sequenceFlow id="Flow_1yih8qx" sourceRef="Gateway_01w1s27" targetRef="Activity_0v46ece"><bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${Signed == true}</bpmn:conditionExpression></bpmn:sequenceFlow><bpmn:sequenceFlow id="Flow_1sqac1u" sourceRef="Gateway_01w1s27" targetRef="Activity_0ll397o" /><bpmn:serviceTask id="Activity_0ll397o" name="Статус: Заполнение анкеты"><bpmn:extensionElements><camunda:connector><camunda:inputOutput><camunda:inputParameter name="url">${ezdocUrl}/api/camunda/instance/book/saveLabel/${instanceId}?label=Заполнение+анкеты</camunda:inputParameter><camunda:inputParameter name="method">POST</camunda:inputParameter><camunda:inputParameter name="headers"><camunda:map><camunda:entry key="Accept">*/*</camunda:entry></camunda:map></camunda:inputParameter></camunda:inputOutput><camunda:connectorId>http-connector</camunda:connectorId></camunda:connector></bpmn:extensionElements><bpmn:incoming>Flow_1sqac1u</bpmn:incoming><bpmn:outgoing>Flow_0sd5jnm</bpmn:outgoing></bpmn:serviceTask><bpmn:sequenceFlow id="Flow_0sd5jnm" sourceRef="Activity_0ll397o" targetRef="Activity_0l27v0k" /><bpmn:userTask id="Activity_1o6pupj" name="Продолжить" camunda:candidateGroups="WWW_SVC, Compliance-Managers, FW_VPN_EXT_EGAR, cb_compliance, jira-users, EzDoc_users"><bpmn:extensionElements><camunda:properties><camunda:property name="isEzdocTask" value="true" /><camunda:property name="ezdocTaskType" value="buttons" /></camunda:properties><camunda:taskListener event="create"><camunda:script scriptFormat="javascript">try {
+
+              var formData = task.execution.processEngineServices.formService.getTaskFormData(task.id);
+
+              var data = {};
+
+              data.taskId = task.id;
+
+              data.templateId = templateId;
+
+              data.formKey = formData.formKey;
+
+              var formFields = [];
+
+              formData.formFields.forEach(function (a) {formFields.push(a.id)});
+
+              data.formFields = formFields;
+
+
+
+              httpPost(ezdocUrl + "/api/camunda/common/taskNotify?type=" + type + "&amp;instanceId=" + instanceId, JSON.stringify(data));
+
+              }
+
+              catch(error) {}
+
+
+
+              /*************
+
+              UTILITY FUNCTIONS
+
+              *************/
+
+              function httpPost(e,t,n){n=n||"application/json;charset=UTF-8";var a=new java.net.URL(e).openConnection();return a.requestMethod="POST",a.setRequestProperty("Content-Type",n),a.setRequestProperty("Accept-Charset", "UTF-8"),a.doOutput=!0,write(a.outputStream,t),asResponse(a)}function asResponse(e){return{data:read(e.inputStream),statusCode:e.responseCode}}function write(e,t){var n=new java.io.DataOutputStream(e);n.writeChars(t),n.flush(),n.close()}function read(e){for(var t,n=new java.io.BufferedReader(new java.io.InputStreamReader(e)),a=new java.lang.StringBuffer;null!=(t=n.readLine());)a.append(t);return n.close(),a.toString()}</camunda:script></camunda:taskListener><camunda:formData><camunda:formField id="{&#34;id&#34;: &#34;Prodolg&#34;, &#34;label&#34;: &#34;Продолжить 1&#34;, &#34;type&#34;:&#34;simple&#34;}" type="string" /><camunda:formField id="ezdocObjectUrl" type="string" /><camunda:formField id="ezdocObjectEditorUrl" type="string" /></camunda:formData></bpmn:extensionElements></bpmn:userTask><bpmn:sequenceFlow id="Flow_1pvqpkk" sourceRef="Activity_0v46ece" targetRef="Activity_044h9xz" /><bpmn:userTask id="Activity_1in5zev" name="Продолжить" camunda:candidateGroups="WWW_SVC, Compliance-Managers, FW_VPN_EXT_EGAR, cb_compliance, jira-users, EzDoc_users"><bpmn:extensionElements><camunda:properties><camunda:property name="isEzdocTask" value="true" /><camunda:property name="ezdocTaskType" value="buttons" /></camunda:properties><camunda:taskListener event="create"><camunda:script scriptFormat="javascript">try {
+
+              var formData = task.execution.processEngineServices.formService.getTaskFormData(task.id);
+
+              var data = {};
+
+              data.taskId = task.id;
+
+              data.templateId = templateId;
+
+              data.formKey = formData.formKey;
+
+              var formFields = [];
+
+              formData.formFields.forEach(function (a) {formFields.push(a.id)});
+
+              data.formFields = formFields;
+
+
+
+              httpPost(ezdocUrl + "/api/camunda/common/taskNotify?type=" + type + "&amp;instanceId=" + instanceId, JSON.stringify(data));
+
+              }
+
+              catch(error) {}
+
+
+
+              /*************
+
+              UTILITY FUNCTIONS
+
+              *************/
+
+              function httpPost(e,t,n){n=n||"application/json;charset=UTF-8";var a=new java.net.URL(e).openConnection();return a.requestMethod="POST",a.setRequestProperty("Content-Type",n),a.setRequestProperty("Accept-Charset", "UTF-8"),a.doOutput=!0,write(a.outputStream,t),asResponse(a)}function asResponse(e){return{data:read(e.inputStream),statusCode:e.responseCode}}function write(e,t){var n=new java.io.DataOutputStream(e);n.writeChars(t),n.flush(),n.close()}function read(e){for(var t,n=new java.io.BufferedReader(new java.io.InputStreamReader(e)),a=new java.lang.StringBuffer;null!=(t=n.readLine());)a.append(t);return n.close(),a.toString()}</camunda:script></camunda:taskListener><camunda:formData><camunda:formField id="{&#34;id&#34;: &#34;Prodolg&#34;, &#34;label&#34;: &#34;Продолжить 3&#34;, &#34;type&#34;:&#34;simple&#34;}" type="string" /><camunda:formField id="ezdocObjectUrl" type="string" /><camunda:formField id="ezdocObjectEditorUrl" type="string" /></camunda:formData></bpmn:extensionElements></bpmn:userTask><bpmn:scriptTask id="Activity_0d77kcv" name="клиентский портфель j" scriptFormat="javascript" camunda:resultVariable="BookId"><bpmn:incoming>Flow_1p5m8me</bpmn:incoming><bpmn:incoming>Flow_1ini097</bpmn:incoming><bpmn:outgoing>Flow_1n4p2am</bpmn:outgoing><bpmn:script>JSON.parse(BookList).firstBatch[j]._id</bpmn:script></bpmn:scriptTask><bpmn:scriptTask id="Activity_1v28020" name="Номер элемента из массива кл.портфелей j=0" scriptFormat="javascript"><bpmn:incoming>Flow_1l530j3</bpmn:incoming><bpmn:outgoing>Flow_1p5m8me</bpmn:outgoing><bpmn:script>execution.setVariable('j', org.camunda.bpm.engine.variable.Variables.integerValue(0))</bpmn:script></bpmn:scriptTask><bpmn:sequenceFlow id="Flow_1p5m8me" sourceRef="Activity_1v28020" targetRef="Activity_0d77kcv" /><bpmn:serviceTask id="Activity_0smb13x" name="Получаем табличный блок этапов"><bpmn:extensionElements><camunda:properties><camunda:property name="isEzdocServiceTask" value="true" /><camunda:property name="ezdocServiceTaskType" value="request" /><camunda:property name="requestType" value="GENERIC" /></camunda:properties><camunda:connector><camunda:inputOutput><camunda:inputParameter name="headers"><camunda:map><camunda:entry key="Accept">*/*</camunda:entry><camunda:entry key="Content-Type">application/json</camunda:entry></camunda:map></camunda:inputParameter><camunda:inputParameter name="url">${ezdocUrl}/api/camunda/instance/book/${BookId}/getAttributes?systemName=GuideSteps&amp;systemName=brokerageAccountID</camunda:inputParameter><camunda:inputParameter name="method">GET</camunda:inputParameter><camunda:outputParameter name="GuideSteps"><camunda:script scriptFormat="javascript">try{
+
+S(response).prop("GuideSteps")
+
+} catch(e) {
+
+throw new org.camunda.bpm.engine.delegate.BpmnError("IT_EXCEPTION",e);
+
+}</camunda:script></camunda:outputParameter><camunda:outputParameter name="TestLength"><camunda:script scriptFormat="javascript">try{
+
+S(response).prop("GuideSteps").elements().size()
+
+} catch(e) {
+
+0
+
+}</camunda:script></camunda:outputParameter><camunda:outputParameter name="ClientPortfolioID"><camunda:script scriptFormat="javascript">JSON.parse(response).brokerageAccountID</camunda:script></camunda:outputParameter></camunda:inputOutput><camunda:connectorId>http-connector</camunda:connectorId></camunda:connector></bpmn:extensionElements><bpmn:incoming>Flow_1n4p2am</bpmn:incoming><bpmn:outgoing>Flow_1jj62z0</bpmn:outgoing></bpmn:serviceTask><bpmn:sequenceFlow id="Flow_1n4p2am" sourceRef="Activity_0d77kcv" targetRef="Activity_0smb13x" /><bpmn:scriptTask id="Activity_1mpdzv0" name="Меняем в табличном блоке строку по заданному номеру" scriptFormat="javascript" camunda:resultVariable="GSA_modified"><bpmn:incoming>Flow_1jj62z0</bpmn:incoming><bpmn:outgoing>Flow_1ozfsj7</bpmn:outgoing><bpmn:script>var GuideSteps_modified = JSON.parse(GuideSteps);
+
+
+
+GuideSteps_modified[0]['NumStep'] = 1;
+
+GuideSteps_modified[0]['NameProcessBar'] = StepName1;
+
+GuideSteps_modified[0]['StatusStep'] = true;
+
+GuideSteps_modified[0]['AnketaId'] = instanceId;
+
+GuideSteps_modified[0]['ResultDateTime'] = ResultDateTime;
+
+
+
+result = new Object();
+
+result.GuideSteps = GuideSteps_modified;
+
+JSON.stringify(result);</bpmn:script></bpmn:scriptTask><bpmn:scriptTask id="Activity_1sujq1z" name="json" scriptFormat="JavaScript" camunda:resultVariable="GuideSteps12"><bpmn:incoming>Flow_1ozfsj7</bpmn:incoming><bpmn:outgoing>Flow_1g1b0jj</bpmn:outgoing><bpmn:script>S(GSA_modified).prop("GuideSteps")</bpmn:script></bpmn:scriptTask><bpmn:sequenceFlow id="Flow_1ozfsj7" sourceRef="Activity_1mpdzv0" targetRef="Activity_1sujq1z" /><bpmn:sequenceFlow id="Flow_1jj62z0" sourceRef="Activity_0smb13x" targetRef="Activity_1mpdzv0" /><bpmn:serviceTask id="Activity_0yxrgi6" name="апдейтим портфель"><bpmn:extensionElements><camunda:connector><camunda:inputOutput><camunda:inputParameter name="url">${ezdocUrl}/api/integration/queue/BOOK</camunda:inputParameter><camunda:inputParameter name="method">POST</camunda:inputParameter><camunda:inputParameter name="headers"><camunda:map><camunda:entry key="Accept">*/*</camunda:entry><camunda:entry key="Content-Type">application/json</camunda:entry></camunda:map></camunda:inputParameter><camunda:inputParameter name="payload">{
+ "templatePrimaryId" : "6167d4df7ef9df0776685460", 
+	"attributes":{
+        "TemplateType": "BrokeragePortfolio",
+        "cifID": "${CIF}", 
+        "mp_source": "Авто",
+        "brokerageAccountID": "${ClientPortfolioID}",
+        "GuideSteps": ${GuideSteps12},
+            "ClientPortfolioStatus": "Профиль согласован"
+}
+}</camunda:inputParameter></camunda:inputOutput><camunda:connectorId>http-connector</camunda:connectorId></camunda:connector></bpmn:extensionElements><bpmn:incoming>Flow_1exjqr7</bpmn:incoming><bpmn:outgoing>Flow_1l277x9</bpmn:outgoing></bpmn:serviceTask><bpmn:exclusiveGateway id="Gateway_0ofg6g2" default="Flow_1exjqr7"><bpmn:incoming>Flow_1g1b0jj</bpmn:incoming><bpmn:outgoing>Flow_1exjqr7</bpmn:outgoing><bpmn:outgoing>Flow_02q79qq</bpmn:outgoing></bpmn:exclusiveGateway><bpmn:sequenceFlow id="Flow_1exjqr7" name="Профиль согласован" sourceRef="Gateway_0ofg6g2" targetRef="Activity_0yxrgi6" /><bpmn:serviceTask id="Activity_15tkcwc" name="апдейтим портфель"><bpmn:extensionElements><camunda:connector><camunda:inputOutput><camunda:inputParameter name="url">${ezdocUrl}/api/integration/queue/BOOK</camunda:inputParameter><camunda:inputParameter name="method">POST</camunda:inputParameter><camunda:inputParameter name="headers"><camunda:map><camunda:entry key="Accept">*/*</camunda:entry><camunda:entry key="Content-Type">application/json</camunda:entry></camunda:map></camunda:inputParameter><camunda:inputParameter name="payload">{
+ "templatePrimaryId" : "6167d4df7ef9df0776685460", 
+	"attributes":{
+        "TemplateType": "BrokeragePortfolio",
+         "cifID": "${CIF}", 
+        "mp_source": "Авто",
+        "brokerageAccountID": "${ClientPortfolioID}",
+        "GuideSteps": ${GuideSteps12},
+        "ClientPortfolioStatus": "Ожидает согласования"
+}
+}</camunda:inputParameter></camunda:inputOutput><camunda:connectorId>http-connector</camunda:connectorId></camunda:connector></bpmn:extensionElements><bpmn:incoming>Flow_02q79qq</bpmn:incoming><bpmn:outgoing>Flow_1cczpy9</bpmn:outgoing></bpmn:serviceTask><bpmn:sequenceFlow id="Flow_02q79qq" name="Ожидает согласования" sourceRef="Gateway_0ofg6g2" targetRef="Activity_15tkcwc"><bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${WaitingAccept == 1}</bpmn:conditionExpression></bpmn:sequenceFlow><bpmn:scriptTask id="Activity_1estc6r" name="увеличиваем значение номера j" scriptFormat="javascript" camunda:resultVariable="j"><bpmn:incoming>Flow_1cczpy9</bpmn:incoming><bpmn:incoming>Flow_1l277x9</bpmn:incoming><bpmn:outgoing>Flow_00t7n8c</bpmn:outgoing><bpmn:script>Math.round(+j+1)</bpmn:script></bpmn:scriptTask><bpmn:sequenceFlow id="Flow_1cczpy9" sourceRef="Activity_15tkcwc" targetRef="Activity_1estc6r" /><bpmn:sequenceFlow id="Flow_1l277x9" sourceRef="Activity_0yxrgi6" targetRef="Activity_1estc6r" /><bpmn:exclusiveGateway id="Gateway_1npuxyw" default="Flow_1ini097"><bpmn:incoming>Flow_00t7n8c</bpmn:incoming><bpmn:outgoing>Flow_1ini097</bpmn:outgoing><bpmn:outgoing>Flow_0akd0qs</bpmn:outgoing></bpmn:exclusiveGateway><bpmn:sequenceFlow id="Flow_00t7n8c" sourceRef="Activity_1estc6r" targetRef="Gateway_1npuxyw" /><bpmn:sequenceFlow id="Flow_1ini097" sourceRef="Gateway_1npuxyw" targetRef="Activity_0d77kcv" /><bpmn:endEvent id="Event_12w4ha1"><bpmn:incoming>Flow_0akd0qs</bpmn:incoming></bpmn:endEvent><bpmn:sequenceFlow id="Flow_0akd0qs" sourceRef="Gateway_1npuxyw" targetRef="Event_12w4ha1"><bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${j == Qty || j &gt; Qty}</bpmn:conditionExpression></bpmn:sequenceFlow><bpmn:sequenceFlow id="Flow_1g1b0jj" sourceRef="Activity_1sujq1z" targetRef="Gateway_0ofg6g2" /><bpmn:serviceTask id="Activity_199djmm" name="Ищем этап 1 в списке этапов"><bpmn:extensionElements><camunda:properties><camunda:property name="isEzdocServiceTask" value="true" /><camunda:property name="ezdocServiceTaskType" value="request" /><camunda:property name="requestType" value="GENERIC" /></camunda:properties><camunda:connector><camunda:inputOutput><camunda:inputParameter name="headers"><camunda:map><camunda:entry key="Accept">*/*</camunda:entry><camunda:entry key="Content-Type">application/json</camunda:entry></camunda:map></camunda:inputParameter><camunda:inputParameter name="url">${ezdocUrl}/api/camunda/common/executeRequest</camunda:inputParameter><camunda:inputParameter name="method">POST</camunda:inputParameter><camunda:inputParameter name="payload">{ 	"find": "book", 	
+
+"filter": 
+
+{
+
+"activityStatus": "ACTIVE", 
+
+"templatePrimaryId": "61cd56f319807c2315dfed7d", 
+
+"attributes.NumStep" : 1
+
+},
+
+"projection": { 		"attributes.NameProcessBar": 1	}
+
+}</camunda:inputParameter><camunda:outputParameter name="StepName1"><camunda:script scriptFormat="javascript">try {
+
+var result_json = 
+
+JSON.parse(response).cursor.firstBatch[0].attributes.NameProcessBar;
+
+JSON.stringify(result_json).replaceAll("\"", "")
+
+}
+
+catch (e)
+
+{
+
+" "
+
+}</camunda:script></camunda:outputParameter><camunda:outputParameter name="isEmpty1"><camunda:script scriptFormat="javascript">S(response)
+
+.prop("cursor")
+
+.prop("firstBatch").elements().isEmpty()</camunda:script></camunda:outputParameter></camunda:inputOutput><camunda:connectorId>http-connector</camunda:connectorId></camunda:connector></bpmn:extensionElements><bpmn:incoming>Flow_1lfm77i</bpmn:incoming><bpmn:outgoing>Flow_1xpok1w</bpmn:outgoing></bpmn:serviceTask><bpmn:exclusiveGateway id="Gateway_1t5lctb" default="Flow_071dlvx"><bpmn:incoming>Flow_1xpok1w</bpmn:incoming><bpmn:outgoing>Flow_0tc2zd1</bpmn:outgoing><bpmn:outgoing>Flow_071dlvx</bpmn:outgoing></bpmn:exclusiveGateway><bpmn:scriptTask id="Activity_022td77" name="Название этапа" camunda:resultVariable="StepName1"><bpmn:incoming>Flow_0tc2zd1</bpmn:incoming><bpmn:outgoing>Flow_19xtva0</bpmn:outgoing><bpmn:script>String('')</bpmn:script></bpmn:scriptTask><bpmn:serviceTask id="Activity_1x7z7zz" name="Ищем этап 2 в списке этапов"><bpmn:extensionElements><camunda:properties><camunda:property name="isEzdocServiceTask" value="true" /><camunda:property name="ezdocServiceTaskType" value="request" /><camunda:property name="requestType" value="GENERIC" /></camunda:properties><camunda:connector><camunda:inputOutput><camunda:inputParameter name="headers"><camunda:map><camunda:entry key="Accept">*/*</camunda:entry><camunda:entry key="Content-Type">application/json</camunda:entry></camunda:map></camunda:inputParameter><camunda:inputParameter name="url">${ezdocUrl}/api/camunda/common/executeRequest</camunda:inputParameter><camunda:inputParameter name="method">POST</camunda:inputParameter><camunda:inputParameter name="payload">{ 	"find": "book", 	
+"filter": 
+{
+"activityStatus": "ACTIVE", 
+"templatePrimaryId": "61cd56f319807c2315dfed7d", 
+"attributes.NumStep" : 2
+},
+"projection": { 		"attributes.NameProcessBar": 1	}
+}</camunda:inputParameter><camunda:outputParameter name="StepName2"><camunda:script scriptFormat="javascript">try {
+var result_json = 
+JSON.parse(response).cursor.firstBatch[0].attributes.NameProcessBar;
+JSON.stringify(result_json).replaceAll("\"", "")
+}
+catch (e)
+{
+" "
+}</camunda:script></camunda:outputParameter><camunda:outputParameter name="isEmpty2"><camunda:script scriptFormat="javascript">S(response)
+.prop("cursor")
+.prop("firstBatch").elements().isEmpty()</camunda:script></camunda:outputParameter></camunda:inputOutput><camunda:connectorId>http-connector</camunda:connectorId></camunda:connector></bpmn:extensionElements><bpmn:incoming>Flow_071dlvx</bpmn:incoming><bpmn:incoming>Flow_19xtva0</bpmn:incoming><bpmn:outgoing>Flow_1qfpaof</bpmn:outgoing></bpmn:serviceTask><bpmn:serviceTask id="Activity_17fnvwd" name="Ищем этап 3 в списке этапов"><bpmn:extensionElements><camunda:properties><camunda:property name="isEzdocServiceTask" value="true" /><camunda:property name="ezdocServiceTaskType" value="request" /><camunda:property name="requestType" value="GENERIC" /></camunda:properties><camunda:connector><camunda:inputOutput><camunda:inputParameter name="headers"><camunda:map><camunda:entry key="Accept">*/*</camunda:entry><camunda:entry key="Content-Type">application/json</camunda:entry></camunda:map></camunda:inputParameter><camunda:inputParameter name="url">${ezdocUrl}/api/camunda/common/executeRequest</camunda:inputParameter><camunda:inputParameter name="method">POST</camunda:inputParameter><camunda:inputParameter name="payload">{ 	"find": "book", 	
+"filter": 
+{
+"activityStatus": "ACTIVE", 
+"templatePrimaryId": "61cd56f319807c2315dfed7d", 
+"attributes.NumStep" : 3
+},
+"projection": { 		"attributes.NameProcessBar": 1	}
+}</camunda:inputParameter><camunda:outputParameter name="StepName3"><camunda:script scriptFormat="javascript">try {
+var result_json = 
+JSON.parse(response).cursor.firstBatch[0].attributes.NameProcessBar;
+JSON.stringify(result_json).replaceAll("\"", "")
+}
+catch (e)
+{
+" "
+}</camunda:script></camunda:outputParameter><camunda:outputParameter name="isEmpty3"><camunda:script scriptFormat="javascript">S(response)
+.prop("cursor")
+.prop("firstBatch").elements().isEmpty()</camunda:script></camunda:outputParameter></camunda:inputOutput><camunda:connectorId>http-connector</camunda:connectorId></camunda:connector></bpmn:extensionElements><bpmn:incoming>Flow_1ajpkdr</bpmn:incoming><bpmn:incoming>Flow_0qt9d1n</bpmn:incoming><bpmn:outgoing>Flow_1ymehub</bpmn:outgoing></bpmn:serviceTask><bpmn:serviceTask id="Activity_07qm0vd" name="Ищем этап 4 в списке этапов"><bpmn:extensionElements><camunda:properties><camunda:property name="isEzdocServiceTask" value="true" /><camunda:property name="ezdocServiceTaskType" value="request" /><camunda:property name="requestType" value="GENERIC" /></camunda:properties><camunda:connector><camunda:inputOutput><camunda:inputParameter name="headers"><camunda:map><camunda:entry key="Accept">*/*</camunda:entry><camunda:entry key="Content-Type">application/json</camunda:entry></camunda:map></camunda:inputParameter><camunda:inputParameter name="url">${ezdocUrl}/api/camunda/common/executeRequest</camunda:inputParameter><camunda:inputParameter name="method">POST</camunda:inputParameter><camunda:inputParameter name="payload">{ 	"find": "book", 	
+"filter": 
+{
+"activityStatus": "ACTIVE", 
+"templatePrimaryId": "61cd56f319807c2315dfed7d", 
+"attributes.NumStep" : 4
+},
+"projection": { 		"attributes.NameProcessBar": 1	}
+}</camunda:inputParameter><camunda:outputParameter name="StepName4"><camunda:script scriptFormat="javascript">try {
+var result_json = 
+JSON.parse(response).cursor.firstBatch[0].attributes.NameProcessBar;
+JSON.stringify(result_json).replaceAll("\"", "")
+}
+catch (e)
+{
+" "
+}</camunda:script></camunda:outputParameter><camunda:outputParameter name="isEmpty4"><camunda:script scriptFormat="javascript">S(response)
+.prop("cursor")
+.prop("firstBatch").elements().isEmpty()</camunda:script></camunda:outputParameter></camunda:inputOutput><camunda:connectorId>http-connector</camunda:connectorId></camunda:connector></bpmn:extensionElements><bpmn:incoming>Flow_1ahchu2</bpmn:incoming><bpmn:incoming>Flow_04tx7ga</bpmn:incoming><bpmn:outgoing>Flow_058i1cr</bpmn:outgoing></bpmn:serviceTask><bpmn:exclusiveGateway id="Gateway_0wi5g0s" default="Flow_1ajpkdr"><bpmn:incoming>Flow_1qfpaof</bpmn:incoming><bpmn:outgoing>Flow_1ajpkdr</bpmn:outgoing><bpmn:outgoing>Flow_1f8ecow</bpmn:outgoing></bpmn:exclusiveGateway><bpmn:exclusiveGateway id="Gateway_1r99ab3" default="Flow_1ahchu2"><bpmn:incoming>Flow_1ymehub</bpmn:incoming><bpmn:outgoing>Flow_1ahchu2</bpmn:outgoing><bpmn:outgoing>Flow_1km3uum</bpmn:outgoing></bpmn:exclusiveGateway><bpmn:exclusiveGateway id="Gateway_1o3lv4x" default="Flow_0y15hgk"><bpmn:incoming>Flow_058i1cr</bpmn:incoming><bpmn:outgoing>Flow_0cj6470</bpmn:outgoing><bpmn:outgoing>Flow_0y15hgk</bpmn:outgoing></bpmn:exclusiveGateway><bpmn:scriptTask id="Activity_17fqvar" name="Название этапа 2" camunda:resultVariable="StepName2"><bpmn:incoming>Flow_1f8ecow</bpmn:incoming><bpmn:outgoing>Flow_0qt9d1n</bpmn:outgoing><bpmn:script>String('')</bpmn:script></bpmn:scriptTask><bpmn:scriptTask id="Activity_07o9e35" name="Название этапа 3" camunda:resultVariable="StepName3"><bpmn:incoming>Flow_1km3uum</bpmn:incoming><bpmn:outgoing>Flow_04tx7ga</bpmn:outgoing><bpmn:script>String('')</bpmn:script></bpmn:scriptTask><bpmn:scriptTask id="Activity_0wjinkv" name="Название этапа 4" camunda:resultVariable="StepName3"><bpmn:incoming>Flow_0cj6470</bpmn:incoming><bpmn:outgoing>Flow_0tj4qfo</bpmn:outgoing><bpmn:script>String('')</bpmn:script></bpmn:scriptTask><bpmn:sequenceFlow id="Flow_1xpok1w" sourceRef="Activity_199djmm" targetRef="Gateway_1t5lctb" /><bpmn:sequenceFlow id="Flow_0tc2zd1" sourceRef="Gateway_1t5lctb" targetRef="Activity_022td77"><bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${isEmpty1 == true}</bpmn:conditionExpression></bpmn:sequenceFlow><bpmn:sequenceFlow id="Flow_071dlvx" sourceRef="Gateway_1t5lctb" targetRef="Activity_1x7z7zz" /><bpmn:sequenceFlow id="Flow_19xtva0" sourceRef="Activity_022td77" targetRef="Activity_1x7z7zz" /><bpmn:sequenceFlow id="Flow_1qfpaof" sourceRef="Activity_1x7z7zz" targetRef="Gateway_0wi5g0s" /><bpmn:sequenceFlow id="Flow_1ajpkdr" sourceRef="Gateway_0wi5g0s" targetRef="Activity_17fnvwd" /><bpmn:sequenceFlow id="Flow_0qt9d1n" sourceRef="Activity_17fqvar" targetRef="Activity_17fnvwd" /><bpmn:sequenceFlow id="Flow_1ymehub" sourceRef="Activity_17fnvwd" targetRef="Gateway_1r99ab3" /><bpmn:sequenceFlow id="Flow_1ahchu2" sourceRef="Gateway_1r99ab3" targetRef="Activity_07qm0vd" /><bpmn:sequenceFlow id="Flow_04tx7ga" sourceRef="Activity_07o9e35" targetRef="Activity_07qm0vd" /><bpmn:sequenceFlow id="Flow_058i1cr" sourceRef="Activity_07qm0vd" targetRef="Gateway_1o3lv4x" /><bpmn:sequenceFlow id="Flow_1f8ecow" sourceRef="Gateway_0wi5g0s" targetRef="Activity_17fqvar"><bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${isEmpty2 == true}</bpmn:conditionExpression></bpmn:sequenceFlow><bpmn:sequenceFlow id="Flow_1km3uum" sourceRef="Gateway_1r99ab3" targetRef="Activity_07o9e35"><bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${isEmpty3 == true}</bpmn:conditionExpression></bpmn:sequenceFlow><bpmn:sequenceFlow id="Flow_0cj6470" sourceRef="Gateway_1o3lv4x" targetRef="Activity_0wjinkv"><bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${isEmpty4 == true}</bpmn:conditionExpression></bpmn:sequenceFlow><bpmn:sequenceFlow id="Flow_0y15hgk" sourceRef="Gateway_1o3lv4x" targetRef="Activity_1m8ihng" /><bpmn:sequenceFlow id="Flow_0tj4qfo" sourceRef="Activity_0wjinkv" targetRef="Activity_1m8ihng" /><bpmn:serviceTask id="Activity_0nav3yw" name="Ищем клиента"><bpmn:extensionElements><camunda:properties><camunda:property name="isEzdocServiceTask" value="true" /><camunda:property name="ezdocServiceTaskType" value="request" /><camunda:property name="requestType" value="GENERIC" /></camunda:properties><camunda:connector><camunda:inputOutput><camunda:inputParameter name="headers"><camunda:map><camunda:entry key="Accept">*/*</camunda:entry><camunda:entry key="Content-Type">application/json</camunda:entry></camunda:map></camunda:inputParameter><camunda:inputParameter name="url">${ezdocUrl}/api/camunda/common/executeRequest</camunda:inputParameter><camunda:inputParameter name="method">POST</camunda:inputParameter><camunda:inputParameter name="payload">{ 	"find": "individualPerson", 	
+
+"filter": 
+
+{
+
+"activityStatus": "ACTIVE", 
+
+"attributes.cifID": "${CIF}"
+
+},
+
+"projection": { 		"_id": 1, "attributes.RiskProfileNumber":1 	}
+
+}</camunda:inputParameter><camunda:outputParameter name="ClientId"><camunda:script scriptFormat="javascript">try {
+
+JSON.parse(response).cursor.firstBatch[0]._id
+
+}
+
+catch (e)
+
+{
+
+"0"
+
+}</camunda:script></camunda:outputParameter><camunda:outputParameter name="isEmpty"><camunda:script scriptFormat="javascript">S(response)
+
+.prop("cursor")
+
+.prop("firstBatch").elements().isEmpty()</camunda:script></camunda:outputParameter><camunda:outputParameter name="RiskProfileNumberOld"><camunda:script scriptFormat="javascript">try {
+JSON.parse(response).cursor.firstBatch[0].attribures.RiskProfileNumber
+}
+catch (e)
+{
+0
+}</camunda:script></camunda:outputParameter></camunda:inputOutput><camunda:connectorId>http-connector</camunda:connectorId></camunda:connector></bpmn:extensionElements><bpmn:incoming>Flow_1bjhqu4</bpmn:incoming><bpmn:outgoing>Flow_030qa1v</bpmn:outgoing></bpmn:serviceTask><bpmn:serviceTask id="Activity_06qka8r" name="Установка статуса Ошибка: не найден клиент"><bpmn:extensionElements><camunda:properties><camunda:property name="isEzdocServiceTask" value="true" /><camunda:property name="ezdocServiceTaskType" value="request" /><camunda:property name="requestType" value="GENERIC" /></camunda:properties><camunda:connector><camunda:inputOutput><camunda:inputParameter name="headers"><camunda:map><camunda:entry key="Accept">*/*</camunda:entry><camunda:entry key="Content-Type">application/json</camunda:entry></camunda:map></camunda:inputParameter><camunda:inputParameter name="url">${ezdocUrl}/api/camunda/instance/book/saveLabel/${instanceId}?label=Ошибка:+не+найден+клиент</camunda:inputParameter><camunda:inputParameter name="method">POST</camunda:inputParameter><camunda:outputParameter name="Error">1</camunda:outputParameter></camunda:inputOutput><camunda:connectorId>http-connector</camunda:connectorId></camunda:connector></bpmn:extensionElements><bpmn:incoming>Flow_0k50vll</bpmn:incoming><bpmn:outgoing>Flow_103n715</bpmn:outgoing></bpmn:serviceTask><bpmn:sequenceFlow id="Flow_030qa1v" sourceRef="Activity_0nav3yw" targetRef="Gateway_0pw4o7j" /><bpmn:exclusiveGateway id="Gateway_0pw4o7j" default="Flow_0c5hn95"><bpmn:incoming>Flow_030qa1v</bpmn:incoming><bpmn:outgoing>Flow_0k50vll</bpmn:outgoing><bpmn:outgoing>Flow_0c5hn95</bpmn:outgoing></bpmn:exclusiveGateway><bpmn:sequenceFlow id="Flow_0k50vll" sourceRef="Gateway_0pw4o7j" targetRef="Activity_06qka8r"><bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${isEmpty == true}</bpmn:conditionExpression></bpmn:sequenceFlow><bpmn:serviceTask id="Activity_1guf554" name="Сообщаем об окончании процесса"><bpmn:extensionElements><camunda:connector><camunda:inputOutput><camunda:inputParameter name="url">${ezdocUrl}/api/camunda/instance/book/processCompleted/${instanceId}</camunda:inputParameter><camunda:inputParameter name="method">POST</camunda:inputParameter><camunda:inputParameter name="headers"><camunda:map><camunda:entry key="Accept">*/*</camunda:entry></camunda:map></camunda:inputParameter></camunda:inputOutput><camunda:connectorId>http-connector</camunda:connectorId></camunda:connector></bpmn:extensionElements><bpmn:incoming>Flow_103n715</bpmn:incoming><bpmn:outgoing>Flow_09xpvgz</bpmn:outgoing></bpmn:serviceTask><bpmn:sequenceFlow id="Flow_103n715" sourceRef="Activity_06qka8r" targetRef="Activity_1guf554" /><bpmn:endEvent id="Event_0t9szde"><bpmn:incoming>Flow_09xpvgz</bpmn:incoming></bpmn:endEvent><bpmn:sequenceFlow id="Flow_09xpvgz" sourceRef="Activity_1guf554" targetRef="Event_0t9szde" /><bpmn:sequenceFlow id="Flow_0c5hn95" sourceRef="Gateway_0pw4o7j" targetRef="Activity_1xf37w9" /><bpmn:serviceTask id="Activity_03csigl" name="Установка значения шага процесса = кол-во вопросов"><bpmn:extensionElements><camunda:properties><camunda:property name="isEzdocServiceTask" value="true" /><camunda:property name="ezdocServiceTaskType" value="request" /><camunda:property name="requestType" value="GENERIC" /></camunda:properties><camunda:connector><camunda:inputOutput><camunda:inputParameter name="headers"><camunda:map><camunda:entry key="Accept">*/*</camunda:entry><camunda:entry key="Content-Type">application/json</camunda:entry></camunda:map></camunda:inputParameter><camunda:inputParameter name="url">${ezdocUrl}/api/camunda/instance/book/${instanceId}/setAttributes?esWaitUntil=true</camunda:inputParameter><camunda:inputParameter name="method">POST</camunda:inputParameter><camunda:inputParameter name="payload"><camunda:script scriptFormat="javascript">S("{}")
+.prop("ProcessStep", String(+QuestionsQuantity))
+.toString()</camunda:script></camunda:inputParameter></camunda:inputOutput><camunda:connectorId>http-connector</camunda:connectorId></camunda:connector></bpmn:extensionElements></bpmn:serviceTask><bpmn:sequenceFlow id="Flow_1ynessz" sourceRef="Activity_0l27v0k" targetRef="Gateway_1jzsaqo" /></bpmn:process><bpmn:signal id="Signal_1ces4he" name="bookUpdateReceive${instanceId}" /><bpmn:signal id="Signal_09ru508" name="rr" /><bpmndi:BPMNDiagram id="BPMNDiagram_1"><bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="TEMPLATE_INSTANCE_PROCESS_RiskProfilingShortVersion_54306582-51fb-4490-b319-96eb828f1e6f"><bpmndi:BPMNEdge id="Flow_1ynessz_di" bpmnElement="Flow_1ynessz"><di:waypoint x="5100" y="760" /><di:waypoint x="5100" y="905" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_0c5hn95_di" bpmnElement="Flow_0c5hn95"><di:waypoint x="2865" y="860" /><di:waypoint x="3000" y="860" /><di:waypoint x="3000" y="650" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_09xpvgz_di" bpmnElement="Flow_09xpvgz"><di:waypoint x="2840" y="1140" /><di:waypoint x="2840" y="1192" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_103n715_di" bpmnElement="Flow_103n715"><di:waypoint x="2840" y="1000" /><di:waypoint x="2840" y="1060" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_0k50vll_di" bpmnElement="Flow_0k50vll"><di:waypoint x="2840" y="885" /><di:waypoint x="2840" y="920" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_030qa1v_di" bpmnElement="Flow_030qa1v"><di:waypoint x="2840" y="790" /><di:waypoint x="2840" y="835" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_0tj4qfo_di" bpmnElement="Flow_0tj4qfo"><di:waypoint x="3310" y="330" /><di:waypoint x="3310" y="490" /><di:waypoint x="2120" y="490" /><di:waypoint x="2120" y="570" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_0y15hgk_di" bpmnElement="Flow_0y15hgk"><di:waypoint x="3170" y="315" /><di:waypoint x="3170" y="490" /><di:waypoint x="2120" y="490" /><di:waypoint x="2120" y="570" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_0cj6470_di" bpmnElement="Flow_0cj6470"><di:waypoint x="3195" y="290" /><di:waypoint x="3260" y="290" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_1km3uum_di" bpmnElement="Flow_1km3uum"><di:waypoint x="2770" y="315" /><di:waypoint x="2770" y="360" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_1f8ecow_di" bpmnElement="Flow_1f8ecow"><di:waypoint x="2420" y="315" /><di:waypoint x="2420" y="360" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_058i1cr_di" bpmnElement="Flow_058i1cr"><di:waypoint x="3070" y="290" /><di:waypoint x="3145" y="290" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_04tx7ga_di" bpmnElement="Flow_04tx7ga"><di:waypoint x="2820" y="400" /><di:waypoint x="2895" y="400" /><di:waypoint x="2895" y="290" /><di:waypoint x="2970" y="290" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_1ahchu2_di" bpmnElement="Flow_1ahchu2"><di:waypoint x="2795" y="290" /><di:waypoint x="2970" y="290" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_1ymehub_di" bpmnElement="Flow_1ymehub"><di:waypoint x="2680" y="290" /><di:waypoint x="2745" y="290" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_0qt9d1n_di" bpmnElement="Flow_0qt9d1n"><di:waypoint x="2470" y="400" /><di:waypoint x="2525" y="400" /><di:waypoint x="2525" y="290" /><di:waypoint x="2580" y="290" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_1ajpkdr_di" bpmnElement="Flow_1ajpkdr"><di:waypoint x="2445" y="290" /><di:waypoint x="2580" y="290" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_1qfpaof_di" bpmnElement="Flow_1qfpaof"><di:waypoint x="2340" y="290" /><di:waypoint x="2395" y="290" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_19xtva0_di" bpmnElement="Flow_19xtva0"><di:waypoint x="2170" y="400" /><di:waypoint x="2205" y="400" /><di:waypoint x="2205" y="290" /><di:waypoint x="2240" y="290" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_071dlvx_di" bpmnElement="Flow_071dlvx"><di:waypoint x="2145" y="290" /><di:waypoint x="2240" y="290" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_0tc2zd1_di" bpmnElement="Flow_0tc2zd1"><di:waypoint x="2120" y="315" /><di:waypoint x="2120" y="360" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_1xpok1w_di" bpmnElement="Flow_1xpok1w"><di:waypoint x="2050" y="290" /><di:waypoint x="2095" y="290" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_1g1b0jj_di" bpmnElement="Flow_1g1b0jj"><di:waypoint x="5410" y="2500" /><di:waypoint x="5465" y="2500" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_0akd0qs_di" bpmnElement="Flow_0akd0qs"><di:waypoint x="4910" y="2775" /><di:waypoint x="4910" y="2862" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_1ini097_di" bpmnElement="Flow_1ini097"><di:waypoint x="4910" y="2725" /><di:waypoint x="4910" y="2540" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_00t7n8c_di" bpmnElement="Flow_00t7n8c"><di:waypoint x="5440" y="2750" /><di:waypoint x="4935" y="2750" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_1l277x9_di" bpmnElement="Flow_1l277x9"><di:waypoint x="5690" y="2540" /><di:waypoint x="5690" y="2750" /><di:waypoint x="5540" y="2750" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_1cczpy9_di" bpmnElement="Flow_1cczpy9"><di:waypoint x="5490" y="2660" /><di:waypoint x="5490" y="2710" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_02q79qq_di" bpmnElement="Flow_02q79qq"><di:waypoint x="5490" y="2525" /><di:waypoint x="5490" y="2580" /><bpmndi:BPMNLabel><dc:Bounds x="5470" y="2546" width="70" height="27" /></bpmndi:BPMNLabel></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_1exjqr7_di" bpmnElement="Flow_1exjqr7"><di:waypoint x="5515" y="2500" /><di:waypoint x="5640" y="2500" /><bpmndi:BPMNLabel><dc:Bounds x="5513" y="2456" width="58" height="27" /></bpmndi:BPMNLabel></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_1jj62z0_di" bpmnElement="Flow_1jj62z0"><di:waypoint x="5110" y="2500" /><di:waypoint x="5170" y="2500" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_1ozfsj7_di" bpmnElement="Flow_1ozfsj7"><di:waypoint x="5270" y="2500" /><di:waypoint x="5310" y="2500" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_1n4p2am_di" bpmnElement="Flow_1n4p2am"><di:waypoint x="4960" y="2500" /><di:waypoint x="5010" y="2500" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_1p5m8me_di" bpmnElement="Flow_1p5m8me"><di:waypoint x="4830" y="2500" /><di:waypoint x="4860" y="2500" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_1pvqpkk_di" bpmnElement="Flow_1pvqpkk"><di:waypoint x="3490" y="1968" /><di:waypoint x="3550" y="1968" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_0sd5jnm_di" bpmnElement="Flow_0sd5jnm"><di:waypoint x="5290" y="1270" /><di:waypoint x="5290" y="720" /><di:waypoint x="5150" y="720" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_1sqac1u_di" bpmnElement="Flow_1sqac1u"><di:waypoint x="5035" y="1310" /><di:waypoint x="5240" y="1310" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_1yih8qx_di" bpmnElement="Flow_1yih8qx"><di:waypoint x="5010" y="1335" /><di:waypoint x="5010" y="1750" /><di:waypoint x="3430" y="1750" /><di:waypoint x="3430" y="1928" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_1fohvjo_di" bpmnElement="Flow_1fohvjo"><di:waypoint x="4895" y="1310" /><di:waypoint x="4985" y="1310" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_155kkx0_di" bpmnElement="Flow_155kkx0"><di:waypoint x="4870" y="1335" /><di:waypoint x="4870" y="1410" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_00cp1wm_di" bpmnElement="Flow_00cp1wm"><di:waypoint x="4870" y="1490" /><di:waypoint x="4870" y="1552" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_1ph69re_di" bpmnElement="Flow_1ph69re"><di:waypoint x="4710" y="1310" /><di:waypoint x="4845" y="1310" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_0h07y8k_di" bpmnElement="Flow_0h07y8k"><di:waypoint x="4210" y="2100" /><di:waypoint x="4610" y="2100" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_0l8yfyp_di" bpmnElement="Flow_0l8yfyp"><di:waypoint x="4370" y="1968" /><di:waypoint x="4660" y="1968" /><di:waypoint x="4660" y="2060" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_0va8uzi_di" bpmnElement="Flow_0va8uzi"><di:waypoint x="4185" y="1968" /><di:waypoint x="4270" y="1968" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_1gwsii2_di" bpmnElement="Flow_1gwsii2"><di:waypoint x="4160" y="1993" /><di:waypoint x="4160" y="2060" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_0pxxrrl_di" bpmnElement="Flow_0pxxrrl"><di:waypoint x="3950" y="2160" /><di:waypoint x="4620" y="2160" /><di:waypoint x="4620" y="2140" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_1djkay4_di" bpmnElement="Flow_1djkay4"><di:waypoint x="4070" y="1968" /><di:waypoint x="4135" y="1968" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_0irbu79_di" bpmnElement="Flow_0irbu79"><di:waypoint x="3900" y="1993" /><di:waypoint x="3900" y="2120" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_0yrzm62_di" bpmnElement="Flow_0yrzm62"><di:waypoint x="3925" y="1968" /><di:waypoint x="3970" y="1968" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_17v0b5b_di" bpmnElement="Flow_17v0b5b"><di:waypoint x="1300" y="485" /><di:waypoint x="1300" y="600" /><di:waypoint x="1090" y="600" /><di:waypoint x="1090" y="720" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_0fjjcyv_di" bpmnElement="Flow_0fjjcyv"><di:waypoint x="1250" y="460" /><di:waypoint x="1275" y="460" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_1cchl6r_di" bpmnElement="Flow_1cchl6r"><di:waypoint x="1325" y="460" /><di:waypoint x="1360" y="460" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_1yg90gq_di" bpmnElement="Flow_1yg90gq"><di:waypoint x="1410" y="500" /><di:waypoint x="1410" y="570" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_1tr0ovd_di" bpmnElement="Flow_1tr0ovd"><di:waypoint x="1090" y="485" /><di:waypoint x="1090" y="720" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_167la7o_di" bpmnElement="Flow_167la7o"><di:waypoint x="1115" y="460" /><di:waypoint x="1150" y="460" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_0omupub_di" bpmnElement="Flow_0omupub"><di:waypoint x="1030" y="460" /><di:waypoint x="1065" y="460" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_1vp72w1_di" bpmnElement="Flow_1vp72w1"><di:waypoint x="870" y="485" /><di:waypoint x="870" y="760" /><di:waypoint x="1040" y="760" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_09q88e9_di" bpmnElement="Flow_09q88e9"><di:waypoint x="895" y="460" /><di:waypoint x="930" y="460" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_08n5g48_di" bpmnElement="Flow_08n5g48"><di:waypoint x="800" y="460" /><di:waypoint x="845" y="460" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_05cdm7e_di" bpmnElement="Flow_05cdm7e"><di:waypoint x="1140" y="760" /><di:waypoint x="1410" y="760" /><di:waypoint x="1410" y="650" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_0mmiaax_di" bpmnElement="Flow_0mmiaax"><di:waypoint x="4780" y="2075" /><di:waypoint x="4780" y="1975" /><di:waypoint x="5062" y="1975" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_15509la_di" bpmnElement="Flow_15509la"><di:waypoint x="4710" y="2100" /><di:waypoint x="4755" y="2100" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_1l530j3_di" bpmnElement="Flow_1l530j3"><di:waypoint x="4780" y="2125" /><di:waypoint x="4780" y="2460" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_0bairec_di" bpmnElement="Flow_0bairec"><di:waypoint x="3830" y="1968" /><di:waypoint x="3875" y="1968" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_18qwj3h_di" bpmnElement="Flow_18qwj3h"><di:waypoint x="3650" y="1968" /><di:waypoint x="3730" y="1968" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_1bjhqu4_di" bpmnElement="Flow_1bjhqu4"><di:waypoint x="2840" y="650" /><di:waypoint x="2840" y="710" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_01zzk5r_di" bpmnElement="Flow_01zzk5r"><di:waypoint x="3930" y="930" /><di:waypoint x="3410" y="930" /><di:waypoint x="3410" y="650" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_1y30uun_di" bpmnElement="Flow_1y30uun"><di:waypoint x="4825" y="420" /><di:waypoint x="5100" y="420" /><di:waypoint x="5100" y="680" /><bpmndi:BPMNLabel><dc:Bounds x="4930" y="402" width="67" height="14" /></bpmndi:BPMNLabel></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_0j55llv_di" bpmnElement="Flow_0j55llv"><di:waypoint x="4800" y="670" /><di:waypoint x="4800" y="702" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_0ltetah_di" bpmnElement="Flow_0ltetah"><di:waypoint x="4800" y="560" /><di:waypoint x="4800" y="590" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_178yatd_di" bpmnElement="Flow_178yatd"><di:waypoint x="4800" y="445" /><di:waypoint x="4800" y="480" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_1lfm77i_di" bpmnElement="Flow_1lfm77i"><di:waypoint x="1980" y="570" /><di:waypoint x="1980" y="330" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_0366zxn_di" bpmnElement="Flow_0366zxn"><di:waypoint x="2720" y="610" /><di:waypoint x="2790" y="610" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_1jpv05l_di" bpmnElement="Flow_1jpv05l"><di:waypoint x="4710" y="239" /><di:waypoint x="4800" y="239" /><di:waypoint x="4800" y="395" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_1d66uja_di" bpmnElement="Flow_1d66uja"><di:waypoint x="5100" y="955" /><di:waypoint x="5100" y="1030" /><di:waypoint x="4273" y="1030" /><di:waypoint x="4273" y="1120" /><bpmndi:BPMNLabel><dc:Bounds x="4707" y="986" width="79" height="27" /></bpmndi:BPMNLabel></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_0vrj85l_di" bpmnElement="Flow_0vrj85l"><di:waypoint x="5075" y="930" /><di:waypoint x="4250" y="930" /><bpmndi:BPMNLabel><dc:Bounds x="4927" y="896" width="72" height="27" /></bpmndi:BPMNLabel></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_0l66w7w_di" bpmnElement="Flow_0l66w7w"><di:waypoint x="2430" y="610" /><di:waypoint x="2470" y="610" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_0l4jmlr_di" bpmnElement="Flow_0l4jmlr"><di:waypoint x="3330" y="610" /><di:waypoint x="3360" y="610" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_0nia4m1_di" bpmnElement="Flow_0nia4m1"><di:waypoint x="800" y="760" /><di:waypoint x="1040" y="760" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_1xa7k0g_di" bpmnElement="Flow_1xa7k0g"><di:waypoint x="750" y="585" /><di:waypoint x="750" y="500" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_0r0cjxt_di" bpmnElement="Flow_0r0cjxt"><di:waypoint x="750" y="635" /><di:waypoint x="750" y="720" /><bpmndi:BPMNLabel><dc:Bounds x="754" y="650" width="52" height="27" /></bpmndi:BPMNLabel></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_0d2um30_di" bpmnElement="Flow_0d2um30"><di:waypoint x="660" y="610" /><di:waypoint x="725" y="610" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_15jju16_di" bpmnElement="Flow_15jju16"><di:waypoint x="560" y="910" /><di:waypoint x="560" y="962" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_1sw3wd5_di" bpmnElement="Flow_1sw3wd5"><di:waypoint x="560" y="779" /><di:waypoint x="560" y="830" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_1d7p1v8_di" bpmnElement="Flow_1d7p1v8"><di:waypoint x="450" y="635" /><di:waypoint x="450" y="739" /><di:waypoint x="510" y="739" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_1qxkc75_di" bpmnElement="Flow_1qxkc75"><di:waypoint x="475" y="610" /><di:waypoint x="560" y="610" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_1uawyvx_di" bpmnElement="Flow_1uawyvx"><di:waypoint x="4150" y="930" /><di:waypoint x="4030" y="930" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_1h81upf_di" bpmnElement="Flow_1h81upf"><di:waypoint x="3460" y="610" /><di:waypoint x="3530" y="610" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_0d86d58_di" bpmnElement="Flow_0d86d58"><di:waypoint x="3190" y="610" /><di:waypoint x="3230" y="610" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_0dahdb7_di" bpmnElement="Flow_0dahdb7"><di:waypoint x="2570" y="610" /><di:waypoint x="2620" y="610" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_1azbago_di" bpmnElement="Flow_1azbago"><di:waypoint x="1880" y="610" /><di:waypoint x="1930" y="610" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_06umeta_di" bpmnElement="Flow_06umeta"><di:waypoint x="1720" y="610" /><di:waypoint x="1780" y="610" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_08mc5nl_di" bpmnElement="Flow_08mc5nl"><di:waypoint x="1540" y="980" /><di:waypoint x="1540" y="1052" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_0cusia7_di" bpmnElement="Flow_0cusia7"><di:waypoint x="1540" y="820" /><di:waypoint x="1540" y="900" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_14hg2xq_di" bpmnElement="Flow_14hg2xq"><di:waypoint x="1540" y="635" /><di:waypoint x="1540" y="740" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_0whjv01_di" bpmnElement="Flow_0whjv01"><di:waypoint x="1565" y="610" /><di:waypoint x="1620" y="610" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_00x0nx8_di" bpmnElement="Flow_00x0nx8"><di:waypoint x="1460" y="610" /><di:waypoint x="1515" y="610" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_0bwrr12_di" bpmnElement="Flow_0bwrr12"><di:waypoint x="2300" y="610" /><di:waypoint x="2330" y="610" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_0zhuxkn_di" bpmnElement="Flow_0zhuxkn"><di:waypoint x="2170" y="610" /><di:waypoint x="2200" y="610" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_0mor03i_di" bpmnElement="Flow_0mor03i"><di:waypoint x="360" y="610" /><di:waypoint x="425" y="610" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_162vnzh_di" bpmnElement="Flow_162vnzh"><di:waypoint x="1880" y="552" /><di:waypoint x="1880" y="260" /><di:waypoint x="310" y="260" /><di:waypoint x="310" y="570" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_01cydca_di" bpmnElement="Flow_01cydca"><di:waypoint x="3590" y="570" /><di:waypoint x="3590" y="260" /><di:waypoint x="3927" y="260" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_0gg8ixq_di" bpmnElement="Flow_0gg8ixq"><di:waypoint x="3050" y="610" /><di:waypoint x="3090" y="610" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_1i879xq_di" bpmnElement="Flow_1i879xq"><di:waypoint x="188" y="610" /><di:waypoint x="260" y="610" /></bpmndi:BPMNEdge><bpmndi:BPMNShape id="Event_1nyxd05_di" bpmnElement="Event_1nyxd05"><dc:Bounds x="152" y="592" width="36" height="36" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_1xf37w9_di" bpmnElement="Activity_1xf37w9"><dc:Bounds x="2950" y="570" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_0x1zezh_di" bpmnElement="Activity_0x1zezh" isExpanded="true"><dc:Bounds x="3927" y="80" width="783" height="317" /></bpmndi:BPMNShape><bpmndi:BPMNEdge id="Flow_1vrr1y6_di" bpmnElement="Flow_1vrr1y6"><di:waypoint x="4487" y="337" /><di:waypoint x="4589" y="337" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_1erxbwx_di" bpmnElement="Flow_1erxbwx"><di:waypoint x="4125" y="337" /><di:waypoint x="4177" y="337" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_03783hy_di" bpmnElement="Flow_03783hy"><di:waypoint x="4277" y="337" /><di:waypoint x="4387" y="337" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_1qi1kle_di" bpmnElement="Flow_1qi1kle"><di:waypoint x="4487" y="216" /><di:waypoint x="4589" y="216" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_02yndvp_di" bpmnElement="Flow_02yndvp"><di:waypoint x="4037" y="242" /><di:waypoint x="4037" y="216" /><di:waypoint x="4120" y="216" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_0ksb6jn_di" bpmnElement="Flow_0ksb6jn"><di:waypoint x="4318" y="216" /><di:waypoint x="4387" y="216" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_08adz16_di" bpmnElement="Flow_08adz16"><di:waypoint x="4220" y="216" /><di:waypoint x="4282" y="216" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_0i12ldc_di" bpmnElement="Flow_0i12ldc"><di:waypoint x="4037" y="292" /><di:waypoint x="4037" y="337" /><di:waypoint x="4089" y="337" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_148t3i9_di" bpmnElement="Flow_148t3i9"><di:waypoint x="3985" y="267" /><di:waypoint x="4012" y="267" /></bpmndi:BPMNEdge><bpmndi:BPMNShape id="Activity_0y2lab3_di" bpmnElement="Activity_0y2lab3"><dc:Bounds x="4120" y="176" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_1g5o61z_di" bpmnElement="Activity_1g5o61z"><dc:Bounds x="4387" y="176" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Event_0vrwoug_di" bpmnElement="Event_0vrwoug"><dc:Bounds x="4282" y="198" width="36" height="36" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Event_15le5gu_di" bpmnElement="Event_15le5gu"><dc:Bounds x="4589" y="198" width="36" height="36" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Event_163c3ra_di" bpmnElement="Event_163c3ra"><dc:Bounds x="4089" y="319" width="36" height="36" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_0kdzpmf_di" bpmnElement="Activity_0kdzpmf"><dc:Bounds x="4177" y="297" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Gateway_1i5scen_di" bpmnElement="Gateway_1i5scen"><dc:Bounds x="4012" y="242" width="50" height="50" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Event_0gl5k90_di" bpmnElement="Event_0gl5k90"><dc:Bounds x="3949" y="249" width="36" height="36" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_0n4xf2v_di" bpmnElement="Activity_0n4xf2v"><dc:Bounds x="4387" y="297" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Event_1o2mt00_di" bpmnElement="Event_1n7jv3y"><dc:Bounds x="4589" y="319" width="36" height="36" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_0tgogd4_di" bpmnElement="Activity_0tgogd4"><dc:Bounds x="260" y="570" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_0qkf749_di" bpmnElement="Activity_0qkf749"><dc:Bounds x="2200" y="570" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Gateway_0k7ag1f_di" bpmnElement="Gateway_0k7ag1f" isMarkerVisible="true"><dc:Bounds x="1515" y="585" width="50" height="50" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_0c0xijz_di" bpmnElement="Activity_0c0xijz"><dc:Bounds x="1490" y="740" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_0redwm1_di" bpmnElement="Activity_0redwm1"><dc:Bounds x="1490" y="900" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Event_0b17b5w_di" bpmnElement="Event_0b17b5w"><dc:Bounds x="1522" y="1052" width="36" height="36" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_1l5goux_di" bpmnElement="Activity_1l5goux"><dc:Bounds x="1620" y="570" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_0ktmbwj_di" bpmnElement="Activity_0ktmbwj" bioc:stroke="black" bioc:fill="white"><dc:Bounds x="1780" y="570" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_1xagp14_di" bpmnElement="Activity_1xagp14" bioc:stroke="black" bioc:fill="white"><dc:Bounds x="2620" y="570" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_1trnm3q_di" bpmnElement="Activity_1trnm3q"><dc:Bounds x="3090" y="570" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_17y4ynu_di" bpmnElement="Activity_17y4ynu"><dc:Bounds x="3530" y="570" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_1m8ihng_di" bpmnElement="Activity_1m8ihng"><dc:Bounds x="2070" y="570" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Gateway_0dfzoxs_di" bpmnElement="Gateway_0dfzoxs" isMarkerVisible="true"><dc:Bounds x="425" y="585" width="50" height="50" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_16a052a_di" bpmnElement="Activity_16a052a"><dc:Bounds x="510" y="699" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_08l1c6n_di" bpmnElement="Activity_08l1c6n"><dc:Bounds x="510" y="830" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Event_0wf263h_di" bpmnElement="Event_0wf263h"><dc:Bounds x="542" y="962" width="36" height="36" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_0ueg117_di" bpmnElement="Activity_0ueg117"><dc:Bounds x="560" y="570" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Gateway_0oxxtyt_di" bpmnElement="Gateway_0oxxtyt" isMarkerVisible="true"><dc:Bounds x="725" y="585" width="50" height="50" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_0o5di10_di" bpmnElement="Activity_0o5di10" bioc:stroke="rgb(142, 36, 170)" bioc:fill="rgb(225, 190, 231)"><dc:Bounds x="700" y="720" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_1aqbnmw_di" bpmnElement="Activity_1aqbnmw"><dc:Bounds x="3360" y="570" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_146eal9_di" bpmnElement="Activity_146eal9"><dc:Bounds x="2470" y="570" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_1buthwi_di" bpmnElement="Activity_1buthwi"><dc:Bounds x="1360" y="570" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_0nalclh_di" bpmnElement="Activity_0nalclh" bioc:stroke="rgb(229, 57, 53)" bioc:fill="rgb(255, 205, 210)"><dc:Bounds x="3230" y="570" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_1x7xchd_di" bpmnElement="Activity_1x7xchd"><dc:Bounds x="2330" y="570" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_0l27v0k_di" bpmnElement="Activity_0l27v0k"><dc:Bounds x="5050" y="680" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_1t1mze9_di" bpmnElement="Activity_1t1mze9"><dc:Bounds x="4150" y="890" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Gateway_1jzsaqo_di" bpmnElement="Gateway_1jzsaqo" isMarkerVisible="true"><dc:Bounds x="5075" y="905" width="50" height="50" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_0b2y6tm_di" bpmnElement="Activity_0b2y6tm" bioc:stroke="rgb(142, 36, 170)" bioc:fill="rgb(225, 190, 231)"><dc:Bounds x="3730" y="1928" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Event_1jr1tnx_di" bpmnElement="Event_05e0pdh"><dc:Bounds x="5062" y="1957" width="36" height="36" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_07dljjt_di" bpmnElement="Activity_07dljjt"><dc:Bounds x="1930" y="570" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Gateway_1b3aimt_di" bpmnElement="Gateway_1b3aimt" isMarkerVisible="true"><dc:Bounds x="4775" y="395" width="50" height="50" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_1f7d9j6_di" bpmnElement="Activity_1f7d9j6"><dc:Bounds x="4750" y="480" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_0apozs6_di" bpmnElement="Activity_0apozs6"><dc:Bounds x="4750" y="590" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Event_14l5qmf_di" bpmnElement="Event_14l5qmf"><dc:Bounds x="4782" y="702" width="36" height="36" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_1v8ehpt_di" bpmnElement="Activity_1v8ehpt"><dc:Bounds x="3930" y="890" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_0grzoj3_di" bpmnElement="Activity_0grzoj3"><dc:Bounds x="2790" y="570" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_044h9xz_di" bpmnElement="Activity_044h9xz"><dc:Bounds x="3550" y="1928" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_0v46ece_di" bpmnElement="Activity_0v46ece"><dc:Bounds x="3390" y="1928" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_0l0kuxo_di" bpmnElement="Activity_0l0kuxo" bioc:stroke="rgb(30, 136, 229)" bioc:fill="rgb(187, 222, 251)"><dc:Bounds x="4610" y="2060" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Gateway_1uornou_di" bpmnElement="Gateway_1uornou" isMarkerVisible="true"><dc:Bounds x="4755" y="2075" width="50" height="50" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_1cnt2z1_di" bpmnElement="Activity_1cnt2z1"><dc:Bounds x="1040" y="720" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_13lm9tb_di" bpmnElement="Activity_13lm9tb"><dc:Bounds x="1360" y="420" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_0bluqvk_di" bpmnElement="Activity_0bluqvk"><dc:Bounds x="700" y="420" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Gateway_0h8hoge_di" bpmnElement="Gateway_0h8hoge" isMarkerVisible="true"><dc:Bounds x="845" y="435" width="50" height="50" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_1vxjyxu_di" bpmnElement="Activity_1vxjyxu"><dc:Bounds x="930" y="420" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Gateway_1hcflp1_di" bpmnElement="Gateway_1hcflp1" isMarkerVisible="true"><dc:Bounds x="1065" y="435" width="50" height="50" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Gateway_0416qk2_di" bpmnElement="Gateway_0416qk2" isMarkerVisible="true"><dc:Bounds x="1275" y="435" width="50" height="50" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_03gc27k_di" bpmnElement="Activity_03gc27k"><dc:Bounds x="1150" y="420" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_1o05dok_di" bpmnElement="Activity_1o05dok"><dc:Bounds x="3970" y="1928" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Gateway_192ybys_di" bpmnElement="Gateway_192ybys" isMarkerVisible="true"><dc:Bounds x="3875" y="1943" width="50" height="50" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Gateway_1ulu3fw_di" bpmnElement="Gateway_1ulu3fw" isMarkerVisible="true"><dc:Bounds x="4135" y="1943" width="50" height="50" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_0hg950t_di" bpmnElement="Activity_0hg950t"><dc:Bounds x="3850" y="2120" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_1450qch_di" bpmnElement="Activity_1450qch"><dc:Bounds x="4110" y="2060" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_0h53e90_di" bpmnElement="Activity_0h53e90"><dc:Bounds x="4270" y="1928" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_1au4knw_di" bpmnElement="Activity_1au4knw" isExpanded="true"><dc:Bounds x="3835" y="1120" width="875" height="420" /></bpmndi:BPMNShape><bpmndi:BPMNEdge id="Flow_0c8iv6s_di" bpmnElement="Flow_0c8iv6s"><di:waypoint x="4220" y="1470" /><di:waypoint x="4270" y="1470" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_1vvyqdm_di" bpmnElement="Flow_1vvyqdm"><di:waypoint x="4370" y="1470" /><di:waypoint x="4432" y="1470" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_1iekn1d_di" bpmnElement="Flow_1iekn1d"><di:waypoint x="4068" y="1470" /><di:waypoint x="4120" y="1470" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_1i8wsso_di" bpmnElement="Flow_1i8wsso"><di:waypoint x="3970" y="1405" /><di:waypoint x="3970" y="1470" /><di:waypoint x="4032" y="1470" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_0rrb0fh_di" bpmnElement="Flow_0rrb0fh"><di:waypoint x="4350" y="1200" /><di:waypoint x="4422" y="1200" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_16dchxw_di" bpmnElement="Flow_16dchxw"><di:waypoint x="4180" y="1200" /><di:waypoint x="4250" y="1200" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_033wel3_di" bpmnElement="Flow_033wel3"><di:waypoint x="3988" y="1200" /><di:waypoint x="4080" y="1200" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_0aass39_di" bpmnElement="Flow_0aass39"><di:waypoint x="3970" y="1355" /><di:waypoint x="3970" y="1218" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_1kev2sb_di" bpmnElement="Flow_1kev2sb"><di:waypoint x="3891" y="1380" /><di:waypoint x="3945" y="1380" /></bpmndi:BPMNEdge><bpmndi:BPMNShape id="Event_06tl1ch_di" bpmnElement="Event_06tl1ch"><dc:Bounds x="3855" y="1362" width="36" height="36" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Gateway_03n8b4d_di" bpmnElement="Gateway_0nekxma"><dc:Bounds x="3945" y="1355" width="50" height="50" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Event_0n8tbd3_di" bpmnElement="Event_0n8tbd3"><dc:Bounds x="3952" y="1182" width="36" height="36" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_1m6wg9r_di" bpmnElement="Activity_1m6wg9r"><dc:Bounds x="4080" y="1160" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_1mke4k1_di" bpmnElement="Activity_1mke4k1"><dc:Bounds x="4250" y="1160" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Event_039bbj5_di" bpmnElement="Event_19ei984"><dc:Bounds x="4422" y="1182" width="36" height="36" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_1176shs_di" bpmnElement="Activity_1176shs"><dc:Bounds x="4270" y="1430" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Event_145s384_di" bpmnElement="Event_10dpt14"><dc:Bounds x="4032" y="1452" width="36" height="36" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Event_0ym5pec_di" bpmnElement="Event_1vbik1n"><dc:Bounds x="4432" y="1452" width="36" height="36" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_14vkbp3_di" bpmnElement="Activity_14vkbp3"><dc:Bounds x="4120" y="1430" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Gateway_0255bha_di" bpmnElement="Gateway_0255bha" isMarkerVisible="true"><dc:Bounds x="4845" y="1285" width="50" height="50" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Event_1y8a2mg_di" bpmnElement="Event_1y8a2mg"><dc:Bounds x="4852" y="1552" width="36" height="36" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_1ykdepm_di" bpmnElement="Activity_1ykdepm"><dc:Bounds x="4820" y="1410" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Gateway_01w1s27_di" bpmnElement="Gateway_01w1s27" isMarkerVisible="true"><dc:Bounds x="4985" y="1285" width="50" height="50" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_0ll397o_di" bpmnElement="Activity_0ll397o"><dc:Bounds x="5240" y="1270" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_1o6pupj_di" bpmnElement="Activity_1o6pupj" bioc:stroke="rgb(67, 160, 71)" bioc:fill="rgb(200, 230, 201)"><dc:Bounds x="5200" y="1810" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_1in5zev_di" bpmnElement="Activity_1in5zev" bioc:stroke="rgb(67, 160, 71)" bioc:fill="rgb(200, 230, 201)"><dc:Bounds x="4870" y="1860" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_0d77kcv_di" bpmnElement="Activity_0d77kcv"><dc:Bounds x="4860" y="2460" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_1v28020_di" bpmnElement="Activity_1v28020"><dc:Bounds x="4730" y="2460" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_0smb13x_di" bpmnElement="Activity_0smb13x"><dc:Bounds x="5010" y="2460" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_1mpdzv0_di" bpmnElement="Activity_1mpdzv0"><dc:Bounds x="5170" y="2460" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_1sujq1z_di" bpmnElement="Activity_1sujq1z"><dc:Bounds x="5310" y="2460" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_0yxrgi6_di" bpmnElement="Activity_0yxrgi6" bioc:stroke="rgb(142, 36, 170)" bioc:fill="rgb(225, 190, 231)"><dc:Bounds x="5640" y="2460" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Gateway_0ofg6g2_di" bpmnElement="Gateway_0ofg6g2" isMarkerVisible="true"><dc:Bounds x="5465" y="2475" width="50" height="50" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_15tkcwc_di" bpmnElement="Activity_15tkcwc" bioc:stroke="rgb(142, 36, 170)" bioc:fill="rgb(225, 190, 231)"><dc:Bounds x="5440" y="2580" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_1estc6r_di" bpmnElement="Activity_1estc6r"><dc:Bounds x="5440" y="2710" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Gateway_1npuxyw_di" bpmnElement="Gateway_1npuxyw" isMarkerVisible="true"><dc:Bounds x="4885" y="2725" width="50" height="50" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Event_12w4ha1_di" bpmnElement="Event_12w4ha1"><dc:Bounds x="4892" y="2862" width="36" height="36" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_199djmm_di" bpmnElement="Activity_199djmm"><dc:Bounds x="1950" y="250" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Gateway_1t5lctb_di" bpmnElement="Gateway_1t5lctb" isMarkerVisible="true"><dc:Bounds x="2095" y="265" width="50" height="50" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_022td77_di" bpmnElement="Activity_022td77"><dc:Bounds x="2070" y="360" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_1x7z7zz_di" bpmnElement="Activity_1x7z7zz"><dc:Bounds x="2240" y="250" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_17fnvwd_di" bpmnElement="Activity_17fnvwd"><dc:Bounds x="2580" y="250" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_07qm0vd_di" bpmnElement="Activity_07qm0vd"><dc:Bounds x="2970" y="250" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Gateway_0wi5g0s_di" bpmnElement="Gateway_0wi5g0s" isMarkerVisible="true"><dc:Bounds x="2395" y="265" width="50" height="50" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Gateway_1r99ab3_di" bpmnElement="Gateway_1r99ab3" isMarkerVisible="true"><dc:Bounds x="2745" y="265" width="50" height="50" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Gateway_1o3lv4x_di" bpmnElement="Gateway_1o3lv4x" isMarkerVisible="true"><dc:Bounds x="3145" y="265" width="50" height="50" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_17fqvar_di" bpmnElement="Activity_17fqvar"><dc:Bounds x="2370" y="360" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_07o9e35_di" bpmnElement="Activity_07o9e35"><dc:Bounds x="2720" y="360" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_0wjinkv_di" bpmnElement="Activity_0wjinkv"><dc:Bounds x="3260" y="250" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_0nav3yw_di" bpmnElement="Activity_0nav3yw"><dc:Bounds x="2790" y="710" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_06qka8r_di" bpmnElement="Activity_06qka8r"><dc:Bounds x="2790" y="920" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Gateway_0pw4o7j_di" bpmnElement="Gateway_0pw4o7j" isMarkerVisible="true"><dc:Bounds x="2815" y="835" width="50" height="50" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_1guf554_di" bpmnElement="Activity_1guf554"><dc:Bounds x="2790" y="1060" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Event_0t9szde_di" bpmnElement="Event_0t9szde"><dc:Bounds x="2822" y="1192" width="36" height="36" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Activity_03csigl_di" bpmnElement="Activity_03csigl"><dc:Bounds x="4800" y="1100" width="100" height="80" /></bpmndi:BPMNShape><bpmndi:BPMNShape id="Event_0ii7v7i_di" bpmnElement="Event_0ii7v7i"><dc:Bounds x="1862" y="552" width="36" height="36" /></bpmndi:BPMNShape></bpmndi:BPMNPlane></bpmndi:BPMNDiagram></bpmn:definitions>
