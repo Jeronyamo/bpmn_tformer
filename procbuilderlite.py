@@ -243,12 +243,13 @@ if __name__ == "__main__":
     print("Overall time:", t_a)
     print(len(PROCESSES))
 
+    ## Print processes
     with open("processes.txt", 'w', encoding='utf-8') as paramfile:
-        # i = 300
-        for proc in PROCESSES:#[i:i+10]:
-            paramfile.write(str(proc))
+        for proc in PROCESSES:
+            paramfile.write(str(proc)[1:-1] + '\n')
 
 
+    ## Print URLs, task types and methods
     with open("unique_params.txt", 'w', encoding='utf-8') as paramfile:
         paramfile.write("URLs:\n")
         params = list(UNIQUE_FIELDS["url"].keys())
