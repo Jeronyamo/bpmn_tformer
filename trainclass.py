@@ -293,7 +293,7 @@ class Transformer(nn.Module):
         return output
 
 
-def def_tformer_loader(_par: TFormerParameters):
+def def_tformer(_par: TFormerParameters):
     return Transformer(_par.src_vocab_size, _par.tgt_vocab_size, _par.d_model,
                        _par.num_heads, _par.num_layers, _par.d_ff, _par.max_seq_length, _par.dropout)
 
@@ -307,11 +307,13 @@ def def_tformer_ckpt(fname: str) -> Transformer:
 Used for training
 """
 class TFormerTrainer:
-    def __init__(self, tformer: Transformer, _par: TFormerParameters, dloader: TFormerDataLoader, _tokenizer: TFormerTokenizer):
-        self.model = tformer
-        self.dloader = dloader
-        self.tokenizer = _tokenizer
+    def __init__(self, _tformer: Transformer, _par: TFormerParameters,
+                 _dloader: TFormerDataLoader, _tokenizer: TFormerTokenizer, _pred_metrics: bool = False):
+        self.model = _tformer
         self.params = _par
+        self.dloader = _dloader
+        self.tokenizer = _tokenizer
+        self.pred_metrics = _pred_metrics
         self.loss = nn.CrossEntropyLoss(ignore_index= 0)
         self.optimizer = optim.Adam(self.model.parameters(), lr= 1e-4, betas= (0.9, 0.98), eps= 1e-9)
 
@@ -392,9 +394,37 @@ class TFormerTrainer:
 Used for prediciton
 """
 class TFormerHandler:
-    def __init__(self, tformer: Transformer):
-        tformer.requires_grad_(False)
+    def __init__(self, tformer: Transformer, _par: TFormerParameters, _tokenizer: TFormerTokenizer, l_url, l_tt, l_m):
+        self.tokenizer = _tokenizer
+        self.tfparams = _par
         self.model = tformer
+        self.l_url = l_url
+        self.l_tt = l_tt
+        self.l_m = l_m
 
-    def predict(self, proc_in):
-        pass
+        self.model.requires_grad_(False)
+        self.model.eval()
+
+    def predict_topk(self, proc_in, k = 5):
+        def TaskBatchDecode(_num: np.ndarray):
+            url_id =  _num % self.l_url
+            met_id =  _num // (self.l_tt * self.l_url)
+            tsk_id = (_num - url_id - met_id * (self.l_tt * self.l_url)) // self.l_url
+            return np.stack([url_id, tsk_id, met_id], 3)
+
+        def get_topk(_output: torch.Tensor):
+            nonlocal k
+            batch = np.argsort(_output.numpy(), 2)[:, :, -k:]
+            return TaskBatchDecode(batch[..., ::-1])
+
+
+        if len(proc_in) > self.tfparams.max_seq_length:
+            raise ValueError(f"Error: process length {len(proc_in)} exceeds max length {self.tfparams.max_seq_length}")
+
+        _proc = tuple(( (proc_in[i] if i < self.tfparams.max_seq_length else PAD_TOKEN)
+                                    for i in range(self.tfparams.max_seq_length + 1)))
+        with torch.no_grad():
+            output = self.model(_proc[:-1], _proc[1:])
+            tmp = get_topk(output)
+            print(f"Predictions: top-{k} = {tmp.tolist()[0]}")
+            return tmp.tolist()[0]
