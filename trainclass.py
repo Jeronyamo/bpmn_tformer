@@ -17,8 +17,8 @@ class TFormerParameters:
         self.d_model = 512
         self.dropout = 0.1
         self.d_ff = 2048
-        self.src_vocab_size = len(l_url) * len(l_tt) * len(l_m) + 5
-        self.tgt_vocab_size = len(l_url) * len(l_tt) * len(l_m) + 5
+        self.src_vocab_size = l_url * l_tt * l_m + 5
+        self.tgt_vocab_size = l_url * l_tt * l_m + 5
 
 
 ##  ============  Data tokenizer  ============  ##
@@ -68,8 +68,8 @@ class TFormerTokenizer:
         # return self.URL[url_id], self.TASKTYPE[tsk_id], self.METHOD[met_id] # tuple[str, str, str]
         return url_id, tsk_id, met_id
 
-    def proc_decode(self, _proc: list[tuple[int]]) -> list[tuple[int, int, int]]:
-        return [self.TaskDecode(_task) for _task in _proc]
+    def proc_decode(self, _procs: list[tuple[int]]) -> list[tuple[int, int, int]]:
+        return [self.TaskDecode(_task) for _proc in _procs for _task in _proc]
 
 
 ##  ============  Data loader  ============  ##
@@ -88,28 +88,29 @@ class TFormerDataLoader:
         train_data: list[tuple[int]] = TFormerDataLoader.get_procs_from_file(procfile, pad_to_len)
         shuffle(train_data)
 
-        self.train_data: list[tuple[int]] = train_data[:int(0.8 * len(self.train_data)) ]
-        self.  val_data: list[tuple[int]] = train_data[ int(0.8 * len(self.train_data)): int(0.9 * len(self.train_data))]
-        self. test_data: list[tuple[int]] = train_data[ int(0.9 * len(self.train_data)):]
+        self.train_data: list[tuple[int]] = train_data[:int(0.8 * len(train_data)) ]
+        self.  val_data: list[tuple[int]] = train_data[ int(0.8 * len(train_data)): int(0.9 * len(train_data))]
+        self. test_data: list[tuple[int]] = train_data[ int(0.9 * len(train_data)):]
 
 
     ##  Read encoded processes from "processes.txt"
     def get_procs_from_file(fname: str, pad_to_len: int) -> list[tuple[int]]:
         proc_list: list[tuple[int]] = []
-        proc_max_len = pad_to_len
+        raw_min_len, raw_max_len = pad_to_len, 0
 
         with open(fname) as procs:
             for line in procs.readlines():
                 if (l := line.strip()) != "":
                     tmp = l.split(", ")
+                    if raw_max_len < len(tmp): raw_max_len = len(tmp)
+                    if raw_min_len > len(tmp): raw_min_len = len(tmp)
                     tmp.extend((PAD_TOKEN for _ in range(pad_to_len - len(tmp))))
                     tmp = tuple(int(task) for task in tmp)
-                    if  proc_max_len < len(tmp):
-                        proc_max_len = len(tmp)
                     proc_list.append(tmp)
 
-        if proc_max_len > pad_to_len:
-            raise RuntimeError("Error: process reader - there is a process with " + str(proc_max_len) + " tasks")
+        print("Processes read, total:", len(proc_list), ", max raw length:", raw_max_len, ", min raw length:", raw_min_len)
+        if raw_max_len > pad_to_len:
+            raise RuntimeError("Error: process reader - there is a process with " + str(raw_max_len) + " tasks")
         return proc_list
 
     ##  Dataset generator
@@ -119,7 +120,7 @@ class TFormerDataLoader:
 
             if to_batch is not None:
                 to_batch *= batch_size
-    
+
             for proc in procs[batch_size * start_from_batch : to_batch]:
                 proc = list(proc)
 
@@ -144,7 +145,7 @@ class TFormerDataLoader:
         if (ds_type ==  "test"): _procs = self.test_data
         if _procs is None: raise ValueError("No dataset of type " + str(ds_type) + '\n')
 
-        return DatasetGenWholeProc(batch_size, start_from_batch, to_batch)
+        return DatasetGenWholeProc(_procs, batch_size, start_from_batch, to_batch)
 
 
 ##  ============  Transformer model  ============  ##
@@ -331,12 +332,12 @@ class TFormerTrainer:
                 self.optimizer.zero_grad()
 
                 output = self.model(source, t_target)
-                loss = self.loss(output.contiguous().view(-1, self.tokenizer.tgt_vocab_size), l_target.contiguous().view(-1))
+                loss = self.loss(output.contiguous().view(-1, self.params.tgt_vocab_size), l_target.contiguous().view(-1))
                 loss.backward()
                 self.optimizer.step()
 
-                val_every = 25
-                val_num_batches = 10
+                val_every = 10
+                val_num_batches = 5
                 print("Iteration", i, f": loss = {loss.item()}", end= '\r')
                 if i and not i % val_every:
                     print()
@@ -345,24 +346,28 @@ class TFormerTrainer:
                 i += 1
 
     def validation(self, batch_size: int, from_batch: int = 0, to_batch: int|None = None) -> None:
-        def get_topk_acc(_output: torch.Tensor, _target, k: list) -> list[int]:
+        def get_topk_acc(_output: torch.Tensor, _target: torch.Tensor, k: list, ind: int) -> list[int]:
             tokens = np.argsort(_output.numpy(), 2)[:, :, -k[0]:]
             s1 = [0 for _ in range(len(k))]
 
+            
             for n_elem in range(tokens.shape[0]):
-                s2 = [0 for _ in range(len(k))]
+                for j in range(len(k)):
+                    s1[j] += _target[n_elem].tolist()[ind] in list(tokens[n_elem])[ind][-k[j]:]
+            # for n_elem in range(tokens.shape[0]):
+            #     s2 = [0 for _ in range(len(k))]
 
-                x = list(tokens[n_elem])
-                labels = _target[n_elem].tolist()
+            #     x = list(tokens[n_elem])
+            #     labels = _target[n_elem].tolist()
 
-                for l in range(self.params.max_seq_length):
-                    if not labels[l]:
-                        for j in range(len(k)):
-                            s1[j] += s2[j] / l
-                        break
+            #     for l in range(self.params.max_seq_length):
+            #         if not labels[l]: # Does it really only count the last task?
+            #             for j in range(len(k)):
+            #                 s1[j] += s2[j] / l
+            #             break
 
-                    for j in range(len(k)):
-                        s2[j] += labels[l] in x[l][-k[j]:]
+            #         for j in range(len(k)):
+            #             s2[j] += labels[l] in x[l][-k[j]:]
 
             for j in range(len(k)):
                 s1[j] /= tokens.shape[0]
@@ -377,12 +382,25 @@ class TFormerTrainer:
             for source, t_target, l_target in self.dloader.gen_dataset("val", batch_size, i, to_batch):
                 self.optimizer.zero_grad()
 
-                output = self.model(source, t_target)
-                tmp = get_topk_acc(output, l_target, topk_accs)
+                end_task_ind = 1
+                for k in range(1, self.params.max_seq_length):
+                    if (t_target[::, k] == 0).all():
+                        end_task_ind = k - 1
+                        break
 
-                for j in range(len(topk_accs)):
-                    acc[j] += tmp[j]
-                i += 1
+                for k in range(1, end_task_ind):
+                    _in   = source.clone().detach()
+                    _in_t = t_target.clone().detach()
+                    _in_l = l_target.clone().detach()
+                    _in  [::, k:] = PAD_TOKEN
+                    _in_t[::, k:] = PAD_TOKEN
+                    _in_l[::, k:] = PAD_TOKEN
+                    output = self.model(source, t_target)
+                    tmp = get_topk_acc(output, l_target, topk_accs, k)
+
+                    for j in range(len(topk_accs)):
+                        acc[j] += tmp[j]
+                    i += 1
                 print(f"Validation iter {i}: top-1 = {acc[2] / i:1.7}, top-3 = {acc[1] / i:1.7}, top-5 = {acc[0] / i:1.7}", end= '\r')
             print()
 

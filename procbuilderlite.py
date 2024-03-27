@@ -3,7 +3,7 @@ import defusedxml.ElementTree as ET
 
 
 PROCESSES = []
-URL, METHOD, TASKTYPE = [], [], []
+URL, METHOD, TASKTYPE = [], [], [None]
 UNIQUE_FIELDS = { "url" : {}, "method" : {}, "taskType" : { None : 0 } }
 SUBPROC_SKIPPABLE = ("association", "textAnnotation", "incoming", "outgoing")
 
@@ -238,10 +238,11 @@ if __name__ == "__main__":
     print("Encoding processes...")
     encode_all_procs()
     t_a = time() - t1
-    print(len(URL), len(METHOD), len(TASKTYPE))
+    print(len(URL), "URLs,", len(METHOD), "methods,", len(TASKTYPE), "task types")
     print("Encoding time:", t_a - t_b)
     print("Overall time:", t_a)
-    print(len(PROCESSES))
+    print("Total number of processes:", len(PROCESSES))
+
 
     ## Print processes
     with open("processes.txt", 'w', encoding='utf-8') as paramfile:
